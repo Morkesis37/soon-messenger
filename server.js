@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 const http = require('http').createServer(app);
 const io = require('socket.io')(http, {
-  maxHttpBufferSize: 5e7,
+  maxHttpBufferSize: 1e8, // 100MB для тяжелых файлов
   cors: { origin: "*", methods: ["GET", "POST"] }
 });
 
@@ -12,10 +12,31 @@ app.get('/', (req, res) => {
   res.sendFile(__dirname + '/index.html');
 });
 
+// База данных аккаунтов на сервере (синхронизация)
+const registeredAccounts = {
+  "catoshi": { password: "lekonty12", bio: "Создатель", color: "#6366f1", avatar: "" }
+};
+
 const users = {};
-const pinnedMessages = {}; // Закрепленные сообщения по комнатам
+const pinnedMessages = {};
 
 io.on('connection', (socket) => {
+
+  // Авторизация и регистрация
+  socket.on('auth user', (data) => {
+    const { username, password, bio, color, avatar } = data;
+    
+    if (registeredAccounts[username]) {
+      if (registeredAccounts[username].password !== password) {
+        socket.emit('auth error', 'Неправильный пароль!');
+        return;
+      }
+    } else {
+      registeredAccounts[username] = { password, bio: bio || 'В сети', color: color || '#6366f1', avatar: avatar || '' };
+    }
+
+    socket.emit('auth success', registeredAccounts[username]);
+  });
 
   socket.on('user join', (data) => {
     const room = (data.room || 'general').toLowerCase();
@@ -23,8 +44,8 @@ io.on('connection', (socket) => {
     users[socket.id] = { 
       name: data.name, 
       avatar: data.avatar, 
-      color: data.color || '#6366f1',
-      status: data.status || 'В сети',
+      color: data.color,
+      status: data.status,
       room: room 
     };
     

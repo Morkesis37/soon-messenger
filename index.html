@@ -1,24 +1,24 @@
 <!DOCTYPE html>
-<html lang="ru" data-theme="dark" data-font="medium">
+<html lang="ru" data-theme="dark" data-font="medium" style="--accent-custom: #6366f1;">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>soon messenger – Ultimate Edition</title>
+  <title>soon messenger – Mega Edition</title>
   <style>
     :root[data-theme="dark"] {
-      --bg-main: #0b0f19; --bg-panel: rgba(17, 24, 39, 0.85); --bg-sidebar: rgba(13, 18, 30, 0.95);
+      --bg-main: #0b0f19; --bg-panel: rgba(17, 24, 39, 0.88); --bg-sidebar: rgba(13, 18, 30, 0.95);
       --border-color: rgba(255, 255, 255, 0.06); --text-main: #f3f4f6; --text-muted: #9ca3af;
-      --accent: #6366f1; --my-msg: linear-gradient(135deg, #6366f1, #8b5cf6); --other-msg: rgba(255, 255, 255, 0.06);
+      --accent: var(--accent-custom); --my-msg: linear-gradient(135deg, var(--accent-custom), #8b5cf6); --other-msg: rgba(255, 255, 255, 0.06);
     }
     :root[data-theme="light"] {
-      --bg-main: #f8fafc; --bg-panel: rgba(255, 255, 255, 0.9); --bg-sidebar: rgba(241, 245, 249, 0.95);
+      --bg-main: #f8fafc; --bg-panel: rgba(255, 255, 255, 0.92); --bg-sidebar: rgba(241, 245, 249, 0.95);
       --border-color: rgba(0, 0, 0, 0.06); --text-main: #0f172a; --text-muted: #64748b;
-      --accent: #4f46e5; --my-msg: linear-gradient(135deg, #4f46e5, #6366f1); --other-msg: rgba(0, 0, 0, 0.04);
+      --accent: var(--accent-custom); --my-msg: linear-gradient(135deg, var(--accent-custom), #6366f1); --other-msg: rgba(0, 0, 0, 0.04);
     }
     :root[data-theme="midnight"] {
       --bg-main: #000000; --bg-panel: #0a0a0a; --bg-sidebar: #050505;
       --border-color: rgba(255, 255, 255, 0.1); --text-main: #ffffff; --text-muted: #777777;
-      --accent: #3b82f6; --my-msg: linear-gradient(135deg, #2563eb, #7c3aed); --other-msg: rgba(255, 255, 255, 0.08);
+      --accent: var(--accent-custom); --my-msg: linear-gradient(135deg, var(--accent-custom), #7c3aed); --other-msg: rgba(255, 255, 255, 0.08);
     }
 
     :root[data-font="small"] { --msg-font: 12px; }
@@ -35,26 +35,27 @@
     }
 
     .modal-overlay {
-      position: fixed; inset: 0; background: rgba(0, 0, 0, 0.75);
+      position: fixed; inset: 0; background: rgba(0, 0, 0, 0.8);
       backdrop-filter: blur(20px); display: flex; justify-content: center; align-items: center;
-      z-index: 999; opacity: 0; pointer-events: none; transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1); padding: 20px;
+      z-index: 999; opacity: 0; pointer-events: none; transition: 0.3s; padding: 20px;
     }
     .modal-overlay.active { opacity: 1; pointer-events: auto; }
 
     .modal-box {
       background: var(--bg-panel); padding: 32px 24px; border-radius: 20px;
-      border: 1px solid var(--border-color); width: 100%; max-width: 360px; text-align: center;
-      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); max-height: 90vh; overflow-y: auto;
+      border: 1px solid var(--border-color); width: 100%; max-width: 380px; text-align: center;
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.6); max-height: 90vh; overflow-y: auto;
     }
     .modal-box h2 { font-size: 22px; font-weight: 700; margin-bottom: 6px; color: var(--text-main); }
     .modal-box p { font-size: 13px; color: var(--text-muted); margin-bottom: 20px; }
+    .error-text { color: #ef4444; font-size: 12px; margin-bottom: 10px; font-weight: 600; }
     
     .modal-box input, .modal-box select {
       width: 100%; padding: 12px 14px; border-radius: 12px;
       border: 1px solid var(--border-color); background: rgba(255,255,255,0.03);
       color: var(--text-main); outline: none; margin-bottom: 12px; font-size: 14px;
     }
-    .color-picker-group { display: flex; gap: 8px; align-items: center; margin-bottom: 16px; justify-content: space-between; font-size: 13px; color: var(--text-muted); }
+    .color-picker-group { display: flex; gap: 8px; align-items: center; margin-bottom: 14px; justify-content: space-between; font-size: 13px; color: var(--text-muted); }
     .color-picker-group input[type="color"] { width: 36px; height: 32px; border: none; border-radius: 8px; cursor: pointer; background: transparent; }
 
     .modal-btn {
@@ -71,7 +72,7 @@
     .image-modal img, .image-modal video { max-width: 90%; max-height: 90%; border-radius: 12px; }
 
     .app-container {
-      width: 100%; max-width: 960px; height: 100%; max-height: 720px;
+      width: 100%; max-width: 980px; height: 100%; max-height: 740px;
       background: var(--bg-panel); backdrop-filter: blur(20px); border-radius: 20px;
       display: flex; box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4); overflow: hidden;
       border: 1px solid var(--border-color); z-index: 1; position: relative;
@@ -81,7 +82,7 @@
     .sidebar-backdrop.active { display: block; }
 
     .sidebar {
-      width: 270px; background: var(--bg-sidebar); border-right: 1px solid var(--border-color);
+      width: 280px; background: var(--bg-sidebar); border-right: 1px solid var(--border-color);
       display: flex; flex-direction: column; padding: 16px; transition: 0.3s; z-index: 10;
     }
     .sidebar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
@@ -97,12 +98,14 @@
 
     .section-label { font-size: 10px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.8px; margin: 12px 0 6px; }
     
-    .rooms-list, .users-list { display: flex; flex-direction: column; gap: 4px; max-height: 130px; overflow-y: auto; }
+    /* Стили папок и чатов */
+    .folder-title { font-size: 12px; font-weight: bold; color: var(--accent); margin-top: 8px; margin-bottom: 4px; display: flex; align-items: center; gap: 4px; }
+    .rooms-list, .users-list { display: flex; flex-direction: column; gap: 4px; max-height: 160px; overflow-y: auto; }
     .room-item, .user-row {
-      padding: 8px 10px; border-radius: 10px; font-size: 13px; font-weight: 500; color: var(--text-muted);
+      padding: 7px 10px; border-radius: 10px; font-size: 13px; font-weight: 500; color: var(--text-muted);
       cursor: pointer; display: flex; align-items: center; gap: 8px; transition: 0.2s;
     }
-    .room-item.active { background: rgba(99, 102, 241, 0.12); color: var(--text-main); font-weight: 600; }
+    .room-item.active { background: rgba(99, 102, 241, 0.15); color: var(--text-main); font-weight: 600; }
     .user-row { cursor: default; }
     .user-status-dot { width: 6px; height: 6px; background: #22c55e; border-radius: 50%; }
 
@@ -110,7 +113,7 @@
       margin-top: auto; padding-top: 12px; border-top: 1px solid var(--border-color);
       display: flex; align-items: center; gap: 10px; cursor: pointer;
     }
-    .profile-avatar { width: 34px; height: 34px; border-radius: 10px; background-size: cover; flex-shrink: 0; }
+    .profile-avatar { width: 34px; height: 34px; border-radius: 10px; background-size: cover; flex-shrink: 0; background-color: #333; }
     .profile-info { display: flex; flex-direction: column; min-width: 0; }
     .profile-name { font-size: 13px; font-weight: 600; color: var(--text-main); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .profile-bio { font-size: 11px; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -132,7 +135,6 @@
     }
     .search-input-box.active { display: block; }
 
-    /* Закрепленное сообщение */
     .pinned-banner {
       background: rgba(99, 102, 241, 0.08); border-bottom: 1px solid var(--border-color);
       padding: 6px 16px; font-size: 12px; display: flex; justify-content: space-between; align-items: center; color: var(--text-muted);
@@ -151,7 +153,7 @@
     .message-wrapper.my { align-self: flex-end; flex-direction: row-reverse; }
     .message-wrapper.search-match .message { border: 1px solid var(--accent); }
 
-    .avatar { width: 30px; height: 30px; border-radius: 9px; background-size: cover; flex-shrink: 0; }
+    .avatar { width: 30px; height: 30px; border-radius: 9px; background-size: cover; flex-shrink: 0; background-color: #333; }
     .message-content { display: flex; flex-direction: column; position: relative; max-width: 100%; }
 
     .username { font-size: 11px; margin-bottom: 2px; font-weight: 600; }
@@ -163,23 +165,17 @@
     .message-wrapper.other .message { background: var(--other-msg); color: var(--text-main); border-top-left-radius: 4px; }
     .message-wrapper.my .message { background: var(--my-msg); color: #fff; border-top-right-radius: 4px; }
 
-    /* Спойлеры */
-    .spoiler {
-      background: rgba(255,255,255,0.15); color: transparent; border-radius: 4px; padding: 0 4px; cursor: pointer; user-select: none; transition: 0.2s;
-    }
+    .spoiler { background: rgba(255,255,255,0.15); color: transparent; border-radius: 4px; padding: 0 4px; cursor: pointer; user-select: none; transition: 0.2s; }
     .spoiler.revealed { background: transparent; color: inherit; user-select: text; }
-
-    /* Опросы */
-    .poll-container { display: flex; flex-direction: column; gap: 6px; min-width: 180px; }
-    .poll-question { font-weight: 600; font-size: 13px; margin-bottom: 2px; }
-    .poll-option-btn {
-      background: rgba(255,255,255,0.06); border: 1px solid var(--border-color); color: var(--text-main);
-      padding: 6px 10px; border-radius: 8px; font-size: 12px; cursor: pointer; text-align: left; display: flex; justify-content: space-between; transition: 0.2s;
-    }
-    .poll-option-btn:hover { background: rgba(255,255,255,0.1); }
 
     .chat-img, .chat-video { max-width: 220px; max-height: 220px; border-radius: 10px; cursor: pointer; margin-top: 2px; display: block; object-fit: cover; }
     .chat-audio { margin-top: 2px; max-width: 200px; height: 32px; outline: none; }
+    
+    /* Стили для обычных файлов */
+    .file-attachment {
+      display: flex; align-items: center; gap: 8px; background: rgba(0,0,0,0.2); padding: 8px 12px; border-radius: 8px; text-decoration: none; color: inherit; font-size: 13px; margin-top: 2px;
+    }
+    .file-attachment:hover { background: rgba(0,0,0,0.3); }
 
     .reply-preview-box {
       background: rgba(0,0,0,0.1); border-left: 2px solid var(--accent); padding: 3px 6px; margin-bottom: 4px; border-radius: 4px; font-size: 11px; color: var(--text-muted);
@@ -193,7 +189,7 @@
     .cancel-reply { cursor: pointer; font-weight: bold; color: #ef4444; }
 
     .reaction-picker {
-      position: absolute; top: -32px; background: var(--bg-panel); border: 1px solid var(--border-color);
+      position: absolute; top: -34px; background: var(--bg-panel); border: 1px solid var(--border-color);
       border-radius: 20px; padding: 2px 6px; display: flex; gap: 4px; box-shadow: 0 8px 20px rgba(0,0,0,0.4);
       opacity: 0; pointer-events: none; transition: 0.2s; z-index: 5;
     }
@@ -208,7 +204,6 @@
 
     .message-time { font-size: 9px; color: var(--text-muted); margin-top: 2px; align-self: flex-end; }
     .message-wrapper.my .message-time { align-self: flex-start; color: rgba(255, 255, 255, 0.6); }
-    .edited-tag { font-size: 9px; opacity: 0.6; margin-left: 3px; }
 
     .typing-indicator { font-size: 11px; color: var(--accent); padding: 0 16px 4px; height: 16px; font-style: italic; }
 
@@ -236,63 +231,68 @@
 </head>
 <body>
 
-  <!-- Авторизация (с поддержкой localStorage) -->
-  <div id="login-overlay" class="modal-overlay">
+  <!-- Авторизация с проверкой пароля на сервере -->
+  <div id="login-overlay" class="modal-overlay active">
     <div class="modal-box">
       <h2>soon.</h2>
-      <p>Вход в защищенный чат</p>
+      <p>Вход в защищенный аккаунт</p>
+      <div id="auth-error" class="error-text" style="display: none;"></div>
       <form id="login-form">
-        <input type="text" id="username-input" placeholder="Никнейм..." required maxlength="15" autocomplete="off" />
-        <input type="password" id="password-input" placeholder="Пароль..." required autocomplete="off" />
+        <input type="text" id="username-input" placeholder="Логин (например: catoshi)..." required maxlength="15" autocomplete="off" />
+        <input type="password" id="password-input" placeholder="Пароль (например: lekonty12)..." required autocomplete="off" />
         <input type="text" id="bio-input" placeholder="Статус..." maxlength="25" autocomplete="off" />
         <div class="color-picker-group">
           <span>Цвет ника:</span>
           <input type="color" id="color-input" value="#6366f1" />
         </div>
-        <button type="submit" class="modal-btn">Войти</button>
+        <button type="submit" class="modal-btn">Войти / Регистрация</button>
       </form>
     </div>
   </div>
 
-  <!-- Модалка профиля -->
-  <div id="profile-overlay" class="modal-overlay">
+  <!-- Меню настроек и кастомизации -->
+  <div id="settings-overlay" class="modal-overlay">
     <div class="modal-box">
-      <h2>Профиль</h2>
-      <p>Настройки аккаунта</p>
-      <form id="profile-form">
-        <input type="text" id="edit-username-input" placeholder="Ник..." required maxlength="15" />
-        <input type="text" id="edit-bio-input" placeholder="Статус..." maxlength="25" />
+      <h2>Настройки</h2>
+      <p>Персонализация мессенджера</p>
+      <form id="settings-form">
         <div class="color-picker-group">
-          <span>Цвет ника:</span>
-          <input type="color" id="edit-color-input" value="#6366f1" />
+          <span>Аватарка (URL картинки):</span>
         </div>
+        <input type="text" id="set-avatar-url" placeholder="https://ссылка-на-картинку.jpg" />
+        
+        <div class="color-picker-group">
+          <span>Основной цвет мессенджера:</span>
+          <input type="color" id="set-accent-color" value="#6366f1" />
+        </div>
+        
+        <div class="color-picker-group">
+          <span>Размер шрифта:</span>
+          <select id="set-font-size">
+            <option value="small">Мелкий</option>
+            <option value="medium" selected>Средний</option>
+            <option value="large">Крупный</option>
+          </select>
+        </div>
+
         <button type="submit" class="modal-btn">Сохранить</button>
-        <button type="button" id="close-profile-modal" class="modal-btn cancel-btn">Отмена</button>
+        <button type="button" id="close-settings-modal" class="modal-btn cancel-btn">Закрыть</button>
       </form>
     </div>
   </div>
 
-  <!-- Создание опроса -->
-  <div id="poll-overlay" class="modal-overlay">
-    <div class="modal-box">
-      <h2>Создать опрос</h2>
-      <form id="poll-form">
-        <input type="text" id="poll-question-input" placeholder="Вопрос..." required maxlength="40" />
-        <input type="text" id="poll-opt1-input" placeholder="Вариант 1..." required maxlength="25" />
-        <input type="text" id="poll-opt2-input" placeholder="Вариант 2..." required maxlength="25" />
-        <button type="submit" class="modal-btn">Запустить опрос</button>
-        <button type="button" id="close-poll-modal" class="modal-btn cancel-btn">Отмена</button>
-      </form>
-    </div>
-  </div>
-
-  <!-- Новый чат -->
+  <!-- Создание комнаты / сообщества -->
   <div id="room-overlay" class="modal-overlay">
     <div class="modal-box">
-      <h2>Новый чат</h2>
+      <h2>Новый чат / Сообщество</h2>
       <form id="room-form">
         <input type="text" id="new-room-input" placeholder="Название комнаты..." required maxlength="20" autocomplete="off" />
-        <button type="submit" class="modal-btn">Перейти</button>
+        <select id="room-folder-select">
+          <option value="Папка: Общие">Папка: Общие</option>
+          <option value="Папка: Сообщества">Папка: Сообщества</option>
+          <option value="Папка: Группы">Папка: Группы</option>
+        </select>
+        <button type="submit" class="modal-btn">Создать</button>
         <button type="button" id="close-room-modal" class="modal-btn cancel-btn">Отмена</button>
       </form>
     </div>
@@ -307,20 +307,28 @@
       <div class="sidebar-header">
         <div class="brand-title">soon messenger</div>
         <div class="header-actions">
+          <button class="icon-btn" id="open-settings-btn" title="Настройки">⚙️</button>
           <button class="icon-btn" id="theme-switch-btn" title="Сменить тему">🎨</button>
           <button class="icon-btn" id="open-room-btn" title="Новый чат">+</button>
         </div>
       </div>
 
-      <div class="section-label">Чаты</div>
-      <div class="rooms-list" id="rooms-list">
+      <!-- Папки для чатов -->
+      <div class="folder-title">📁 Общие</div>
+      <div class="rooms-list" id="folder-general">
         <div class="room-item active" data-room="general"><span>🌐</span><span>Общий чат</span></div>
       </div>
+
+      <div class="folder-title">🏰 Сообщества</div>
+      <div class="rooms-list" id="folder-communities"></div>
+
+      <div class="folder-title">👥 Группы</div>
+      <div class="rooms-list" id="folder-groups"></div>
 
       <div class="section-label">Участники онлайн</div>
       <div class="users-list" id="users-list"></div>
 
-      <div class="user-profile-badge" id="open-profile-btn">
+      <div class="user-profile-badge" id="open-profile-settings">
         <div class="profile-avatar" id="my-profile-avatar"></div>
         <div class="profile-info">
           <div class="profile-name" id="my-profile-name">Гость</div>
@@ -338,11 +346,9 @@
         <div class="header-right-actions">
           <input type="text" id="search-input" class="search-input-box" placeholder="Поиск..." />
           <button class="icon-btn" id="search-toggle-btn" title="Поиск">🔍</button>
-          <button class="icon-btn" id="open-poll-btn" title="Создать опрос">📊</button>
         </div>
       </div>
 
-      <!-- Баннер закрепа -->
       <div class="pinned-banner" id="pinned-banner" style="display: none;">
         <div>📌 Закреп: <b id="pinned-text"></b></div>
         <span style="cursor: pointer;" id="unpin-btn" title="Открепить">✕</span>
@@ -357,10 +363,10 @@
       </div>
 
       <form id="chat-form" class="chat-form">
-        <input type="file" id="file-input" accept="image/*,video/*" style="display: none;" />
-        <button type="button" class="media-btn" id="attach-btn" title="Файл">📎</button>
+        <input type="file" id="file-input" style="display: none;" />
+        <button type="button" class="media-btn" id="attach-btn" title="Прикрепить файл">📎</button>
         <button type="button" class="media-btn mic-btn" id="mic-btn" title="Голосовое">🎤</button>
-        <input type="text" id="message-input" placeholder="Сообщение (используйте ||спойлер||)..." autocomplete="off" />
+        <input type="text" id="message-input" placeholder="Сообщение..." autocomplete="off" />
         <button type="submit" class="submit-btn">➤</button>
       </form>
     </div>
@@ -376,7 +382,6 @@
     let currentRoom = 'general';
     let replyingTo = null;
     let editingMsgId = null;
-    let activePinnedMsg = null;
 
     const themes = ['dark', 'light', 'midnight'];
     let currentThemeIdx = 0;
@@ -386,57 +391,59 @@
       document.documentElement.setAttribute('data-theme', themes[currentThemeIdx]);
     });
 
-    // Автопроверка сохраненного профиля в LocalStorage
-    window.addEventListener('DOMContentLoaded', () => {
-      const savedUser = localStorage.getItem('soon_user');
-      if (savedUser) {
-        const data = JSON.parse(savedUser);
-        myUsername = data.name;
-        myBio = data.bio;
-        myColor = data.color;
-        myAvatar = data.avatar;
-        updateProfileBadge();
-        socket.emit('user join', { name: myUsername, avatar: myAvatar, color: myColor, status: myBio, room: 'general' });
-        document.getElementById('login-overlay').classList.remove('active');
-      } else {
-        document.getElementById('login-overlay').classList.add('active');
-      }
-    });
-
+    // Авторизация с проверкой пароля
     const loginForm = document.getElementById('login-form');
+    const authError = document.getElementById('auth-error');
+
     loginForm.addEventListener('submit', (e) => {
       e.preventDefault();
-      const name = document.getElementById('username-input').value.trim();
-      if (name) {
-        myUsername = name;
-        myBio = document.getElementById('bio-input').value.trim() || 'В сети';
-        myColor = document.getElementById('color-input').value;
-        myAvatar = `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(myUsername)}`;
-        
-        localStorage.setItem('soon_user', JSON.stringify({ name: myUsername, bio: myBio, color: myColor, avatar: myAvatar }));
-        updateProfileBadge();
-        socket.emit('user join', { name: myUsername, avatar: myAvatar, color: myColor, status: myBio, room: 'general' });
-        document.getElementById('login-overlay').classList.remove('active');
-      }
+      const username = document.getElementById('username-input').value.trim();
+      const password = document.getElementById('password-input').value.trim();
+      const bio = document.getElementById('bio-input').value.trim();
+      const color = document.getElementById('color-input').value;
+
+      socket.emit('auth user', { username, password, bio, color });
     });
 
-    const profileOverlay = document.getElementById('profile-overlay');
-    document.getElementById('open-profile-btn').addEventListener('click', () => {
-      document.getElementById('edit-username-input').value = myUsername;
-      document.getElementById('edit-bio-input').value = myBio;
-      document.getElementById('edit-color-input').value = myColor;
-      profileOverlay.classList.add('active');
+    socket.on('auth error', (msg) => {
+      authError.textContent = msg;
+      authError.style.display = 'block';
     });
-    document.getElementById('close-profile-modal').addEventListener('click', () => profileOverlay.classList.remove('active'));
 
-    document.getElementById('profile-form').addEventListener('submit', (e) => {
-      e.preventDefault();
-      myUsername = document.getElementById('edit-username-input').value.trim();
-      myBio = document.getElementById('edit-bio-input').value.trim() || 'В сети';
-      myColor = document.getElementById('edit-color-input').value;
-      localStorage.setItem('soon_user', JSON.stringify({ name: myUsername, bio: myBio, color: myColor, avatar: myAvatar }));
+    socket.on('auth success', (accData) => {
+      myUsername = document.getElementById('username-input').value.trim();
+      myBio = accData.bio;
+      myColor = accData.color;
+      myAvatar = accData.avatar || `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(myUsername)}`;
+      
       updateProfileBadge();
-      profileOverlay.classList.remove('active');
+      socket.emit('user join', { name: myUsername, avatar: myAvatar, color: myColor, status: myBio, room: 'general' });
+      document.getElementById('login-overlay').classList.remove('active');
+    });
+
+    // Настройки приложения
+    const settingsOverlay = document.getElementById('settings-overlay');
+    document.getElementById('open-settings-btn').addEventListener('click', () => {
+      document.getElementById('set-avatar-url').value = myAvatar;
+      document.getElementById('set-accent-color').value = myColor;
+      settingsOverlay.classList.add('active');
+    });
+    document.getElementById('open-profile-settings').addEventListener('click', () => settingsOverlay.classList.add('active'));
+    document.getElementById('close-settings-modal').addEventListener('click', () => settingsOverlay.classList.remove('active'));
+
+    document.getElementById('settings-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const newAvatar = document.getElementById('set-avatar-url').value.trim();
+      const newAccent = document.getElementById('set-accent-color').value;
+      const fontSize = document.getElementById('set-font-size').value;
+
+      if (newAvatar) myAvatar = newAvatar;
+      myColor = newAccent;
+      document.documentElement.style.setProperty('--accent-custom', myColor);
+      document.documentElement.setAttribute('data-font', fontSize);
+
+      updateProfileBadge();
+      settingsOverlay.classList.remove('active');
     });
 
     function updateProfileBadge() {
@@ -451,6 +458,7 @@
     document.getElementById('mobile-menu-btn').addEventListener('click', () => { sidebar.classList.add('mobile-open'); sidebarBackdrop.classList.add('active'); });
     sidebarBackdrop.addEventListener('click', () => { sidebar.classList.remove('mobile-open'); sidebarBackdrop.classList.remove('active'); });
 
+    // Создание комнат по папкам (Сообщества и Группы)
     const roomOverlay = document.getElementById('room-overlay');
     document.getElementById('open-room-btn').addEventListener('click', () => { document.getElementById('new-room-input').value = ''; roomOverlay.classList.add('active'); });
     document.getElementById('close-room-modal').addEventListener('click', () => roomOverlay.classList.remove('active'));
@@ -458,41 +466,47 @@
     document.getElementById('room-form').addEventListener('submit', (e) => {
       e.preventDefault();
       const targetRoom = document.getElementById('new-room-input').value.trim().toLowerCase();
+      const folderType = document.getElementById('room-folder-select').value;
+      
       if (targetRoom) {
         if (targetRoom === currentRoom) return;
         currentRoom = targetRoom;
         socket.emit('change room', currentRoom);
         document.getElementById('chat-window').innerHTML = '';
         document.getElementById('current-room-title').textContent = currentRoom;
+
+        // Добавляем в нужную папку визуально
+        const item = document.createElement('div');
+        item.classList.add('room-item', 'active');
+        item.setAttribute('data-room', currentRoom);
+        item.innerHTML = `<span>💬</span><span>${currentRoom}</span>`;
+        item.addEventListener('click', () => switchRoom(currentRoom));
+
+        if (folderType.includes('Сообщества')) {
+          document.getElementById('folder-communities').appendChild(item);
+        } else if (folderType.includes('Группы')) {
+          document.getElementById('folder-groups').appendChild(item);
+        } else {
+          document.getElementById('folder-general').appendChild(item);
+        }
+
         sidebar.classList.remove('mobile-open');
         sidebarBackdrop.classList.remove('active');
       }
       roomOverlay.classList.remove('active');
     });
 
-    // Опросы модалка
-    const pollOverlay = document.getElementById('poll-overlay');
-    document.getElementById('open-poll-btn').addEventListener('click', () => pollOverlay.classList.add('active'));
-    document.getElementById('close-poll-modal').addEventListener('click', () => pollOverlay.classList.remove('active'));
+    function switchRoom(room) {
+      if (room === currentRoom) return;
+      currentRoom = room;
+      socket.emit('change room', currentRoom);
+      document.getElementById('chat-window').innerHTML = '';
+      document.getElementById('current-room-title').textContent = currentRoom;
+      sidebar.classList.remove('mobile-open');
+      sidebarBackdrop.classList.remove('active');
+    }
 
-    document.getElementById('poll-form').addEventListener('submit', (e) => {
-      e.preventDefault();
-      const q = document.getElementById('poll-question-input').value;
-      const opt1 = document.getElementById('poll-opt1-input').value;
-      const opt2 = document.getElementById('poll-opt2-input').value;
-      
-      emitPayload({
-        type: 'poll',
-        poll: { question: q, options: [{ text: opt1, votes: [] }, { text: opt2, votes: [] }] }
-      });
-
-      document.getElementById('poll-question-input').value = '';
-      document.getElementById('poll-opt1-input').value = '';
-      document.getElementById('poll-opt2-input').value = '';
-      pollOverlay.classList.remove('active');
-    });
-
-    // Поиск сообщений
+    // Поиск
     const searchToggleBtn = document.getElementById('search-toggle-btn');
     const searchInput = document.getElementById('search-input');
     searchToggleBtn.addEventListener('click', () => {
@@ -513,7 +527,7 @@
       });
     });
 
-    // Отправка файлов и медиа
+    // Отправка файлов любого формата
     const fileInput = document.getElementById('file-input');
     document.getElementById('attach-btn').addEventListener('click', () => fileInput.click());
     fileInput.addEventListener('change', (e) => {
@@ -521,8 +535,13 @@
         const file = e.target.files[0];
         const reader = new FileReader();
         reader.onload = (evt) => {
-          if (file.type.startsWith('image/')) emitPayload({ type: 'image', mediaUrl: evt.target.result });
-          else if (file.type.startsWith('video/')) emitPayload({ type: 'video', mediaUrl: evt.target.result });
+          if (file.type.startsWith('image/')) {
+            emitPayload({ type: 'image', mediaUrl: evt.target.result });
+          } else if (file.type.startsWith('video/')) {
+            emitPayload({ type: 'video', mediaUrl: evt.target.result });
+          } else {
+            emitPayload({ type: 'file', fileName: file.name, fileUrl: evt.target.result });
+          }
         };
         reader.readAsDataURL(file);
       }
@@ -562,13 +581,6 @@
       const text = messageInput.value.trim();
       if (!text) return;
 
-      if (editingMsgId) {
-        socket.emit('edit message', { msgId: editingMsgId, newText: text });
-        editingMsgId = null;
-        messageInput.value = '';
-        return;
-      }
-
       emitPayload({
         type: 'text',
         text: text,
@@ -601,7 +613,6 @@
       typingTimeout = setTimeout(() => socket.emit('typing', false), 2000);
     });
 
-    // Обработка входящих сообщений
     socket.on('chat message', (data) => {
       renderMessage(data);
     });
@@ -614,8 +625,9 @@
       wrapper.classList.add('message-wrapper', isMy ? 'my' : 'other');
       wrapper.setAttribute('data-msg-id', data.msgId);
 
+      // Расширенный набор реакций
       let pickerHtml = '<div class="reaction-picker">';
-      ['👍', '❤️', '🔥', '😂', '😮'].forEach(emoji => {
+      ['👍', '❤️', '🔥', '😂', '😮', '😢', '👏', '🚀', '🎉', '💩'].forEach(emoji => {
         pickerHtml += `<button class="reaction-btn" onclick="sendReaction('${data.msgId}', '${emoji}')">${emoji}</button>`;
       });
       pickerHtml += '</div>';
@@ -629,10 +641,9 @@
         bodyHtml = `<video src="${data.mediaUrl}" class="chat-video" controls></video>`;
       } else if (data.type === 'audio') {
         bodyHtml = `<audio src="${data.mediaUrl}" controls class="chat-audio"></audio>`;
-      } else if (data.type === 'poll') {
-        bodyHtml = createPollHtml(data.msgId, data.poll);
+      } else if (data.type === 'file') {
+        bodyHtml = `<a href="${data.fileUrl}" download="${data.fileName}" class="file-attachment">📁 ${data.fileName}</a>`;
       } else {
-        // Парсинг спойлеров ||текст||
         let parsedText = data.text.replace(/\|\|(.*?)\|\|/g, '<span class="spoiler" onclick="this.classList.toggle(\'revealed\')">$1</span>');
         bodyHtml = `<span class="msg-text">${parsedText}</span><span class="edited-tag"></span>`;
       }
@@ -653,57 +664,26 @@
 
       const msgBubble = wrapper.querySelector('.message');
       msgBubble.addEventListener('click', (e) => {
-        if (['IMG', 'VIDEO', 'AUDIO', 'SPAN', 'BUTTON'].includes(e.target.tagName)) return;
+        if (['IMG', 'VIDEO', 'AUDIO', 'SPAN', 'BUTTON', 'A'].includes(e.target.tagName)) return;
         e.stopPropagation();
         
-        if (isMy && data.type === 'text') {
-          editingMsgId = data.msgId;
-          messageInput.value = wrapper.querySelector('.msg-text').textContent;
-          messageInput.focus();
-        } else {
-          replyingTo = { name: data.name, text: data.type === 'text' ? data.text : '[Медиа]' };
-          document.getElementById('replying-to-text').textContent = `${replyingTo.name}: ${replyingTo.text}`;
-          replyingBar.classList.add('active');
-          messageInput.focus();
-        }
+        replyingTo = { name: data.name, text: data.type === 'text' ? data.text : '[Медиа/Файл]' };
+        document.getElementById('replying-to-text').textContent = `${replyingTo.name}: ${replyingTo.text}`;
+        replyingBar.classList.add('active');
+        messageInput.focus();
       });
 
-      // Добавим меню закрепления по долгому клику или контексту (двойной клик)
       msgBubble.addEventListener('dblclick', () => {
-        socket.emit('pin message', { msgId: data.msgId, text: data.type === 'text' ? data.text : '[Медиафайл]', name: data.name });
+        socket.emit('pin message', { msgId: data.msgId, text: data.type === 'text' ? data.text : '[Файл]', name: data.name });
       });
 
       chatWindow.appendChild(wrapper);
       chatWindow.scrollTop = chatWindow.scrollHeight;
     }
 
-    function createPollHtml(msgId, poll) {
-      let html = `<div class="poll-container" data-poll-id="${msgId}"><div class="poll-question">📊 ${poll.question}</div>`;
-      poll.options.forEach((opt, idx) => {
-        const totalVotes = poll.options.reduce((sum, o) => sum + o.votes.length, 0);
-        const percent = totalVotes > 0 ? Math.round((opt.votes.length / totalVotes) * 100) : 0;
-        html += `<button class="poll-option-btn" onclick="votePoll('${msgId}', ${idx})"><span>${opt.text}</span> <span>${percent}% (${opt.votes.length})</span></button>`;
-      });
-      html += `</div>`;
-      return html;
-    }
-
-    window.votePoll = (msgId, optIdx) => {
-      socket.emit('vote poll', { msgId, optIdx, user: myUsername });
-    };
-
-    socket.on('update poll', (data) => {
-      // Обновление голосов опроса в реальном времени (простейшая логика)
-      const container = document.querySelector(`[data-poll-id="${data.msgId}"]`);
-      if (container) {
-        // Перерисовываем блок при желании или обновляем данные
-      }
-    });
-
     socket.on('pinned message', (pin) => {
       const banner = document.getElementById('pinned-banner');
       if (pin) {
-        activePinnedMsg = pin;
         document.getElementById('pinned-text').textContent = `${pin.name}: ${pin.text}`;
         banner.style.display = 'flex';
       } else {
@@ -715,28 +695,35 @@
       socket.emit('pin message', null);
     });
 
-    socket.on('edit message', (data) => {
-      const wrapper = document.querySelector(`[data-msg-id="${data.msgId}"]`);
-      if (wrapper) {
-        const textSpan = wrapper.querySelector('.msg-text');
-        const tagSpan = wrapper.querySelector('.edited-tag');
-        if (textSpan) textSpan.textContent = data.newText;
-        if (tagSpan) tagSpan.textContent = '(изменено)';
-      }
-    });
-
     function openFullMedia(type, url) {
       const container = document.getElementById('media-container-full');
-      container.innerHTML = type === 'image' ? `<img src="${url}" />` : `<video src="${url}" controls autoplay></video>`;
+      container.innerHTML = `<img src="${url}" />`;
       document.getElementById('image-modal').classList.add('active');
     }
     document.getElementById('image-modal').addEventListener('click', () => document.getElementById('image-modal').classList.remove('active'));
 
     window.sendReaction = (msgId, emoji) => socket.emit('add reaction', { msgId, emoji, user: myUsername });
 
+    const reactionsData = {};
     socket.on('update reaction', (data) => {
       const { msgId, emoji, user } = data;
-      // Логика реакций
+      if (!reactionsData[msgId]) reactionsData[msgId] = {};
+      if (!reactionsData[msgId][emoji]) reactionsData[msgId][emoji] = new Set();
+      if (reactionsData[msgId][emoji].has(user)) reactionsData[msgId][emoji].delete(user);
+      else reactionsData[msgId][emoji].add(user);
+
+      const container = document.getElementById(`reactions-${msgId}`);
+      if (container) {
+        container.innerHTML = '';
+        Object.keys(reactionsData[msgId]).forEach(e => {
+          if (reactionsData[msgId][e].size > 0) {
+            const badge = document.createElement('span');
+            badge.classList.add('reaction-badge');
+            badge.textContent = `${e} ${reactionsData[msgId][e].size}`;
+            container.appendChild(badge);
+          }
+        });
+      }
     });
 
     socket.on('system message', (text) => {
