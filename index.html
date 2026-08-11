@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>soon messenger – Ultimate Edition</title>
+  <title>soon messenger – Fixed Auth</title>
   <style>
     :root[data-theme="dark"] {
       --bg-main: #0b0f19; --bg-panel: rgba(17, 24, 39, 0.9); --bg-sidebar: rgba(13, 18, 30, 0.96);
@@ -48,8 +48,7 @@
     }
     .modal-box h2 { font-size: 22px; font-weight: 700; margin-bottom: 6px; }
     .modal-box p { font-size: 13px; color: var(--text-muted); margin-bottom: 20px; }
-    .error-text { color: #ef4444; font-size: 12px; margin-bottom: 10px; font-weight: 600; }
-    .success-text { color: #22c55e; font-size: 12px; margin-bottom: 10px; font-weight: 600; }
+    .error-text { color: #ef4444; font-size: 12px; margin-bottom: 10px; font-weight: 600; display: block; }
     
     .modal-box input, .modal-box select {
       width: 100%; padding: 12px 14px; border-radius: 12px;
@@ -102,7 +101,6 @@
     .user-row { cursor: default; }
     .user-status-dot { width: 6px; height: 6px; background: #22c55e; border-radius: 50%; }
 
-    /* Плашка друзей */
     .friends-section-box { border-top: 1px solid var(--border-color); padding-top: 10px; margin-top: 10px; }
     .friend-actions-row { display: flex; gap: 4px; margin-bottom: 6px; }
     .friend-input { flex: 1; padding: 6px 10px; font-size: 12px; border-radius: 8px; border: 1px solid var(--border-color); background: rgba(255,255,255,0.03); color: var(--text-main); outline: none; }
@@ -235,7 +233,7 @@
     <div class="modal-box">
       <h2>soon.</h2>
       <p>Вход в защищенный аккаунт</p>
-      <div id="auth-error" class="error-text" style="display: none;"></div>
+      <div id="auth-error" class="error-text"></div>
       <form id="login-form">
         <input type="text" id="username-input" placeholder="Логин (например: catoshi)..." required maxlength="15" autocomplete="off" />
         <input type="password" id="password-input" placeholder="Пароль (например: lekonty12)..." required autocomplete="off" />
@@ -244,12 +242,12 @@
           <span>Цвет ника:</span>
           <input type="color" id="color-input" value="#6366f1" />
         </div>
-        <button type="submit" class="modal-btn">Войти / Регистрация</button>
+        <button type="submit" class="modal-btn" id="login-submit-btn">Войти / Регистрация</button>
       </form>
     </div>
   </div>
 
-  <!-- Настройки с выбором аватарки из локальных файлов -->
+  <!-- Настройки -->
   <div id="settings-overlay" class="modal-overlay">
     <div class="modal-box">
       <h2>Настройки</h2>
@@ -286,7 +284,7 @@
     </div>
   </div>
 
-  <!-- Создание комнаты / сообщества / группы -->
+  <!-- Создание комнаты -->
   <div id="room-overlay" class="modal-overlay">
     <div class="modal-box">
       <h2>Создать чат</h2>
@@ -328,7 +326,6 @@
       <div class="folder-title">👥 Группы</div>
       <div class="rooms-list" id="folder-groups"></div>
 
-      <!-- Плашка друзей -->
       <div class="friends-section-box">
         <div class="folder-title">🤝 Друзья <span id="friend-req-count" class="friend-req-badge" style="display:none;">0</span></div>
         <div class="friend-actions-row">
@@ -408,23 +405,32 @@
 
     const loginForm = document.getElementById('login-form');
     const authError = document.getElementById('auth-error');
+    const loginSubmitBtn = document.getElementById('login-submit-btn');
 
     loginForm.addEventListener('submit', (e) => {
       e.preventDefault();
+      authError.textContent = '';
       myUsername = document.getElementById('username-input').value.trim();
       const password = document.getElementById('password-input').value.trim();
       myBio = document.getElementById('bio-input').value.trim() || 'В сети';
       myColor = document.getElementById('color-input').value;
 
+      if (!myUsername || !password) {
+        authError.textContent = 'Введите логин и пароль!';
+        return;
+      }
+
+      loginSubmitBtn.textContent = 'Подключение...';
       socket.emit('auth user', { username: myUsername, password, bio: myBio, color: myColor });
     });
 
     socket.on('auth error', (msg) => {
       authError.textContent = msg;
-      authError.style.display = 'block';
+      loginSubmitBtn.textContent = 'Войти / Регистрация';
     });
 
     socket.on('auth success', (accData) => {
+      myUsername = accData.username;
       myBio = accData.bio;
       myColor = accData.color;
       myAvatar = accData.avatar || `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(myUsername)}`;
@@ -442,7 +448,6 @@
       updateProfileBadge();
     });
 
-    // Система друзей
     document.getElementById('send-friend-btn').addEventListener('click', () => {
       const friendName = document.getElementById('friend-username-input').value.trim();
       if (friendName) {
@@ -491,16 +496,25 @@
       });
     }
 
-    // Загрузка аватара из файлов в настройках
     let tempNewAvatar = '';
     document.getElementById('avatar-file-input').addEventListener('change', (e) => {
       if (e.target.files[0]) {
+        const file = e.target.files[0];
         const reader = new FileReader();
         reader.onload = (evt) => {
-          tempNewAvatar = evt.target.result;
-          alert('Фоторафия загружена! Нажмите "Сохранить".');
+          // Сжимаем аватарку прямо в клиенте, чтобы не перегружать сеть
+          const img = new Image();
+          img.src = evt.target.result;
+          img.onload = () => {
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = 150; canvas.height = 150;
+            ctx.drawImage(img, 0, 0, 150, 150);
+            tempNewAvatar = canvas.toDataURL('image/jpeg', 0.8);
+            alert('Фоторафия загружена! Нажмите "Сохранить".');
+          }
         };
-        reader.readAsDataURL(e.target.files[0]);
+        reader.readAsDataURL(file);
       }
     });
 
@@ -541,7 +555,6 @@
     document.getElementById('mobile-menu-btn').addEventListener('click', () => { sidebar.classList.add('mobile-open'); sidebarBackdrop.classList.add('active'); });
     sidebarBackdrop.addEventListener('click', () => { sidebar.classList.remove('mobile-open'); sidebarBackdrop.classList.remove('active'); });
 
-    // Создание комнат (сообщества / группы)
     const roomOverlay = document.getElementById('room-overlay');
     document.getElementById('open-room-btn').addEventListener('click', () => { document.getElementById('new-room-input').value = ''; roomOverlay.classList.add('active'); });
     document.getElementById('close-room-modal').addEventListener('click', () => roomOverlay.classList.remove('active'));
@@ -556,13 +569,8 @@
       }
     });
 
-    socket.on('rooms list', (rooms) => {
-      renderRooms(rooms);
-    });
-
-    socket.on('room created', (room) => {
-      appendRoomElement(room);
-    });
+    socket.on('rooms list', (rooms) => { renderRooms(rooms); });
+    socket.on('room created', (room) => { appendRoomElement(room); });
 
     function renderRooms(rooms) {
       document.getElementById('folder-communities').innerHTML = '';
@@ -602,7 +610,6 @@
       sidebarBackdrop.classList.remove('active');
     };
 
-    // Поиск
     const searchToggleBtn = document.getElementById('search-toggle-btn');
     const searchInput = document.getElementById('search-input');
     searchToggleBtn.addEventListener('click', () => {
@@ -623,7 +630,6 @@
       });
     });
 
-    // Файлы
     const fileInput = document.getElementById('file-input');
     document.getElementById('attach-btn').addEventListener('click', () => fileInput.click());
     fileInput.addEventListener('change', (e) => {
@@ -644,7 +650,6 @@
       fileInput.value = '';
     });
 
-    // Голосовые
     let mediaRecorder, audioChunks = [], isRecording = false;
     const micBtn = document.getElementById('mic-btn');
     micBtn.addEventListener('click', async () => {
@@ -709,9 +714,7 @@
       typingTimeout = setTimeout(() => socket.emit('typing', false), 2000);
     });
 
-    socket.on('chat message', (data) => {
-      renderMessage(data);
-    });
+    socket.on('chat message', (data) => { renderMessage(data); });
 
     function renderMessage(data) {
       const isMy = data.id === socket.id;
@@ -832,7 +835,6 @@
     socket.on('update users list', (users) => {
       const uList = document.getElementById('users-list');
       uList.innerHTML = '';
-      users.users = users;
       users.forEach(u => {
         const row = document.createElement('div');
         row.classList.add('user-row');

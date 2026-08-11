@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 const http = require('http').createServer(app);
 const io = require('socket.io')(http, {
-  maxHttpBufferSize: 2e8, // 200MB для тяжелых файлов
+  maxHttpBufferSize: 5e7, // 50MB
   cors: { origin: "*", methods: ["GET", "POST"] }
 });
 
@@ -12,7 +12,6 @@ app.get('/', (req, res) => {
   res.sendFile(__dirname + '/index.html');
 });
 
-// База данных аккаунтов со синхронизацией друзей и аватарок
 const registeredAccounts = {
   "catoshi": { 
     password: "lekonty12", 
@@ -35,13 +34,20 @@ io.on('connection', (socket) => {
   socket.on('auth user', (data) => {
     const { username, password, bio, color } = data;
     
-    if (registeredAccounts[username]) {
-      if (registeredAccounts[username].password !== password) {
+    if (!username || !password) {
+      socket.emit('auth error', 'Заполни логин и пароль!');
+      return;
+    }
+
+    const cleanUsername = username.trim().toLowerCase();
+
+    if (registeredAccounts[cleanUsername]) {
+      if (registeredAccounts[cleanUsername].password !== password) {
         socket.emit('auth error', 'Неправильный пароль!');
         return;
       }
     } else {
-      registeredAccounts[username] = { 
+      registeredAccounts[cleanUsername] = { 
         password, 
         bio: bio || 'В сети', 
         color: color || '#6366f1', 
@@ -51,11 +57,13 @@ io.on('connection', (socket) => {
       };
     }
 
-    socket.emit('auth success', registeredAccounts[username]);
-    sendUserDataToClient(username);
+    socket.emit('auth success', {
+      username: cleanUsername,
+      ...registeredAccounts[cleanUsername]
+    });
+    sendUserDataToClient(cleanUsername);
   });
 
-  // Обновление профиля и аватара
   socket.on('update profile', (data) => {
     const { username, bio, color, avatar } = data;
     if (registeredAccounts[username]) {
@@ -66,37 +74,36 @@ io.on('connection', (socket) => {
     }
   });
 
-  // Система друзей
   socket.on('send friend request', (data) => {
     const { from, to } = data;
-    if (!registeredAccounts[to]) {
-      socket.emit('friend error', 'Пользователь с таким логином не найден!');
+    const target = to.trim().toLowerCase();
+    
+    if (!registeredAccounts[target]) {
+      socket.emit('friend error', 'Пользователь не найден!');
       return;
     }
-    if (to === from) {
-      socket.emit('friend error', 'Нельзя добавить самого себя!');
+    if (target === from) {
+      socket.emit('friend error', 'Нельзя добавить себя!');
       return;
     }
-    if (registeredAccounts[from].friends.includes(to)) {
-      socket.emit('friend error', 'Этот пользователь уже у вас в друзьях!');
+    if (registeredAccounts[from].friends.includes(target)) {
+      socket.emit('friend error', 'Уже в друзьях!');
       return;
     }
-    if (registeredAccounts[to].friendRequests.includes(from)) {
+    if (registeredAccounts[target].friendRequests.includes(from)) {
       socket.emit('friend error', 'Заявка уже отправлена!');
       return;
     }
 
-    registeredAccounts[to].friendRequests.push(from);
-    sendUserDataToClient(to);
+    registeredAccounts[target].friendRequests.push(from);
+    sendUserDataToClient(target);
     socket.emit('friend success', 'Заявка отправлена!');
   });
 
   socket.on('accept friend request', (data) => {
     const { username, friend } = data;
     if (registeredAccounts[username] && registeredAccounts[friend]) {
-      // Удаляем из заявок
       registeredAccounts[username].friendRequests = registeredAccounts[username].friendRequests.filter(f => f !== friend);
-      // Добавляем в друзья обоим
       if (!registeredAccounts[username].friends.includes(friend)) registeredAccounts[username].friends.push(friend);
       if (!registeredAccounts[friend].friends.includes(username)) registeredAccounts[friend].friends.push(username);
 
@@ -113,7 +120,6 @@ io.on('connection', (socket) => {
     }
   });
 
-  // Создание комнат (групп / сообществ)
   socket.on('create room', (data) => {
     const { name, type } = data;
     const roomId = name.trim().toLowerCase();
@@ -142,7 +148,6 @@ io.on('connection', (socket) => {
 
   socket.on('change room', (newRoom) => {
     if (!users[socket.id]) return;
-
     const oldRoom = users[socket.id].room;
     const targetRoom = newRoom.trim().toLowerCase();
 
@@ -229,5 +234,5 @@ function getUsersInRoom(room) {
 }
 
 http.listen(3000, () => {
-  console.log('Сервер запущен и полностью оптимизирован!');
+  console.log('Сервер запущен!');
 });
