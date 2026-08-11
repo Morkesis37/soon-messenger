@@ -19,10 +19,16 @@ io.on('connection', (socket) => {
   socket.on('user join', (data) => {
     const room = (data.room || 'general').toLowerCase();
     socket.join(room);
-    users[socket.id] = { name: data.name, avatar: data.avatar, room: room };
+    users[socket.id] = { 
+      name: data.name, 
+      avatar: data.avatar, 
+      color: data.color || '#c084fc',
+      status: data.status || 'В сети',
+      room: room 
+    };
     
-    const roomName = room === 'general' ? 'Общий чат' : `комнату "${room}"`;
-    io.to(room).emit('system message', `${data.name} вошел(шла) в ${roomName}`);
+    io.to(room).emit('system message', `${data.name} вошел(шла) в чат`);
+    io.to(room).emit('update users list', getUsersInRoom(room));
   });
 
   socket.on('change room', (newRoom) => {
@@ -34,20 +40,28 @@ io.on('connection', (socket) => {
     if (oldRoom === targetRoom) return;
 
     socket.leave(oldRoom);
-    io.to(oldRoom).emit('system message', `${users[socket.id].name} перешел(шла) в другой чат`);
+    io.to(oldRoom).emit('system message', `${users[socket.id].name} покинул(а) чат`);
+    io.to(oldRoom).emit('update users list', getUsersInRoom(oldRoom));
 
     socket.join(targetRoom);
     users[socket.id].room = targetRoom;
 
-    const roomName = targetRoom === 'general' ? 'Общий чат' : `комнату "${targetRoom}"`;
-    io.to(targetRoom).emit('system message', `${users[socket.id].name} вошел(шла) в ${roomName}`);
+    io.to(targetRoom).emit('system message', `${users[socket.id].name} вошел(шла) в чат`);
+    io.to(targetRoom).emit('update users list', getUsersInRoom(targetRoom));
   });
 
-  // Пересылка шифрованных или обычных сообщений
   socket.on('chat message', (data) => {
     if (users[socket.id]) {
       const room = users[socket.id].room;
       io.to(room).emit('chat message', data);
+    }
+  });
+
+  // Редактирование сообщений (ТГ стайл)
+  socket.on('edit message', (data) => {
+    if (users[socket.id]) {
+      const room = users[socket.id].room;
+      io.to(room).emit('edit message', data);
     }
   });
 
@@ -68,12 +82,23 @@ io.on('connection', (socket) => {
   socket.on('disconnect', () => {
     if (users[socket.id]) {
       const room = users[socket.id].room;
-      io.to(room).emit('system message', `${users[socket.id].name} покинул(а) чат`);
+      io.to(room).emit('system message', `${users[socket.id].name} вышел из сети`);
       delete users[socket.id];
+      io.to(room).emit('update users list', getUsersInRoom(room));
     }
   });
 });
 
+function getUsersInRoom(room) {
+  const list = [];
+  for (let id in users) {
+    if (users[id].room === room) {
+      list.push({ name: users[id].name, avatar: users[id].avatar, color: users[id].color, status: users[id].status });
+    }
+  }
+  return list;
+}
+
 http.listen(3000, () => {
-  console.log('Сервер запущен на порту 3000!');
+  console.log('Сервер запущен!');
 });
