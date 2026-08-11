@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 const http = require('http').createServer(app);
 const io = require('socket.io')(http, {
-  maxHttpBufferSize: 1e7,
+  maxHttpBufferSize: 5e7, // Увеличили лимит до 50MB для видео
   cors: { origin: "*", methods: ["GET", "POST"] }
 });
 
@@ -22,7 +22,7 @@ io.on('connection', (socket) => {
     users[socket.id] = { 
       name: data.name, 
       avatar: data.avatar, 
-      color: data.color || '#c084fc',
+      color: data.color || '#6366f1',
       status: data.status || 'В сети',
       room: room 
     };
@@ -57,7 +57,6 @@ io.on('connection', (socket) => {
     }
   });
 
-  // Редактирование сообщений (ТГ стайл)
   socket.on('edit message', (data) => {
     if (users[socket.id]) {
       const room = users[socket.id].room;
