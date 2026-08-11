@@ -3,15 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>soon messenger – Mega Edition</title>
+  <title>soon messenger – Ultimate Edition</title>
   <style>
     :root[data-theme="dark"] {
-      --bg-main: #0b0f19; --bg-panel: rgba(17, 24, 39, 0.88); --bg-sidebar: rgba(13, 18, 30, 0.95);
+      --bg-main: #0b0f19; --bg-panel: rgba(17, 24, 39, 0.9); --bg-sidebar: rgba(13, 18, 30, 0.96);
       --border-color: rgba(255, 255, 255, 0.06); --text-main: #f3f4f6; --text-muted: #9ca3af;
       --accent: var(--accent-custom); --my-msg: linear-gradient(135deg, var(--accent-custom), #8b5cf6); --other-msg: rgba(255, 255, 255, 0.06);
     }
     :root[data-theme="light"] {
-      --bg-main: #f8fafc; --bg-panel: rgba(255, 255, 255, 0.92); --bg-sidebar: rgba(241, 245, 249, 0.95);
+      --bg-main: #f8fafc; --bg-panel: rgba(255, 255, 255, 0.94); --bg-sidebar: rgba(241, 245, 249, 0.96);
       --border-color: rgba(0, 0, 0, 0.06); --text-main: #0f172a; --text-muted: #64748b;
       --accent: var(--accent-custom); --my-msg: linear-gradient(135deg, var(--accent-custom), #6366f1); --other-msg: rgba(0, 0, 0, 0.04);
     }
@@ -31,7 +31,7 @@
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
       background: var(--bg-main); height: 100vh; height: 100dvh;
       display: flex; justify-content: center; align-items: center;
-      color: var(--text-main); overflow: hidden; transition: background 0.3s;
+      color: var(--text-main); overflow: hidden;
     }
 
     .modal-overlay {
@@ -43,12 +43,13 @@
 
     .modal-box {
       background: var(--bg-panel); padding: 32px 24px; border-radius: 20px;
-      border: 1px solid var(--border-color); width: 100%; max-width: 380px; text-align: center;
+      border: 1px solid var(--border-color); width: 100%; max-width: 400px; text-align: center;
       box-shadow: 0 25px 50px rgba(0, 0, 0, 0.6); max-height: 90vh; overflow-y: auto;
     }
-    .modal-box h2 { font-size: 22px; font-weight: 700; margin-bottom: 6px; color: var(--text-main); }
+    .modal-box h2 { font-size: 22px; font-weight: 700; margin-bottom: 6px; }
     .modal-box p { font-size: 13px; color: var(--text-muted); margin-bottom: 20px; }
     .error-text { color: #ef4444; font-size: 12px; margin-bottom: 10px; font-weight: 600; }
+    .success-text { color: #22c55e; font-size: 12px; margin-bottom: 10px; font-weight: 600; }
     
     .modal-box input, .modal-box select {
       width: 100%; padding: 12px 14px; border-radius: 12px;
@@ -64,15 +65,8 @@
     }
     .cancel-btn { background: transparent; border: 1px solid var(--border-color); color: var(--text-muted); margin-top: 8px; }
 
-    .image-modal {
-      position: fixed; inset: 0; background: rgba(0, 0, 0, 0.95); backdrop-filter: blur(10px);
-      display: flex; justify-content: center; align-items: center; z-index: 1000; opacity: 0; pointer-events: none; transition: 0.25s;
-    }
-    .image-modal.active { opacity: 1; pointer-events: auto; }
-    .image-modal img, .image-modal video { max-width: 90%; max-height: 90%; border-radius: 12px; }
-
     .app-container {
-      width: 100%; max-width: 980px; height: 100%; max-height: 740px;
+      width: 100%; max-width: 1024px; height: 100%; max-height: 760px;
       background: var(--bg-panel); backdrop-filter: blur(20px); border-radius: 20px;
       display: flex; box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4); overflow: hidden;
       border: 1px solid var(--border-color); z-index: 1; position: relative;
@@ -86,7 +80,7 @@
       display: flex; flex-direction: column; padding: 16px; transition: 0.3s; z-index: 10;
     }
     .sidebar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
-    .brand-title { font-weight: 700; font-size: 17px; color: var(--text-main); }
+    .brand-title { font-weight: 700; font-size: 17px; }
     
     .header-actions { display: flex; gap: 6px; }
     .icon-btn {
@@ -98,10 +92,9 @@
 
     .section-label { font-size: 10px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.8px; margin: 12px 0 6px; }
     
-    /* Стили папок и чатов */
     .folder-title { font-size: 12px; font-weight: bold; color: var(--accent); margin-top: 8px; margin-bottom: 4px; display: flex; align-items: center; gap: 4px; }
-    .rooms-list, .users-list { display: flex; flex-direction: column; gap: 4px; max-height: 160px; overflow-y: auto; }
-    .room-item, .user-row {
+    .rooms-list, .users-list, .friends-list { display: flex; flex-direction: column; gap: 4px; max-height: 140px; overflow-y: auto; }
+    .room-item, .user-row, .friend-row {
       padding: 7px 10px; border-radius: 10px; font-size: 13px; font-weight: 500; color: var(--text-muted);
       cursor: pointer; display: flex; align-items: center; gap: 8px; transition: 0.2s;
     }
@@ -109,13 +102,20 @@
     .user-row { cursor: default; }
     .user-status-dot { width: 6px; height: 6px; background: #22c55e; border-radius: 50%; }
 
+    /* Плашка друзей */
+    .friends-section-box { border-top: 1px solid var(--border-color); padding-top: 10px; margin-top: 10px; }
+    .friend-actions-row { display: flex; gap: 4px; margin-bottom: 6px; }
+    .friend-input { flex: 1; padding: 6px 10px; font-size: 12px; border-radius: 8px; border: 1px solid var(--border-color); background: rgba(255,255,255,0.03); color: var(--text-main); outline: none; }
+    .friend-add-btn { padding: 6px 10px; font-size: 12px; background: var(--accent); border: none; color: white; border-radius: 8px; cursor: pointer; font-weight: 600; }
+    .friend-req-badge { font-size: 10px; background: #ef4444; color: white; padding: 1px 5px; border-radius: 6px; margin-left: auto; }
+
     .user-profile-badge {
       margin-top: auto; padding-top: 12px; border-top: 1px solid var(--border-color);
       display: flex; align-items: center; gap: 10px; cursor: pointer;
     }
     .profile-avatar { width: 34px; height: 34px; border-radius: 10px; background-size: cover; flex-shrink: 0; background-color: #333; }
     .profile-info { display: flex; flex-direction: column; min-width: 0; }
-    .profile-name { font-size: 13px; font-weight: 600; color: var(--text-main); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .profile-name { font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .profile-bio { font-size: 11px; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
     .chat-area { flex: 1; display: flex; flex-direction: column; width: 100%; min-width: 0; position: relative; }
@@ -171,7 +171,6 @@
     .chat-img, .chat-video { max-width: 220px; max-height: 220px; border-radius: 10px; cursor: pointer; margin-top: 2px; display: block; object-fit: cover; }
     .chat-audio { margin-top: 2px; max-width: 200px; height: 32px; outline: none; }
     
-    /* Стили для обычных файлов */
     .file-attachment {
       display: flex; align-items: center; gap: 8px; background: rgba(0,0,0,0.2); padding: 8px 12px; border-radius: 8px; text-decoration: none; color: inherit; font-size: 13px; margin-top: 2px;
     }
@@ -231,7 +230,7 @@
 </head>
 <body>
 
-  <!-- Авторизация с проверкой пароля на сервере -->
+  <!-- Авторизация -->
   <div id="login-overlay" class="modal-overlay active">
     <div class="modal-box">
       <h2>soon.</h2>
@@ -250,16 +249,22 @@
     </div>
   </div>
 
-  <!-- Меню настроек и кастомизации -->
+  <!-- Настройки с выбором аватарки из локальных файлов -->
   <div id="settings-overlay" class="modal-overlay">
     <div class="modal-box">
       <h2>Настройки</h2>
-      <p>Персонализация мессенджера</p>
+      <p>Кастомизация приложения</p>
       <form id="settings-form">
-        <div class="color-picker-group">
-          <span>Аватарка (URL картинки):</span>
+        <div class="color-picker-group" style="justify-content: space-between; margin-bottom: 12px;">
+          <span>Сменить аватарку:</span>
+          <input type="file" id="avatar-file-input" accept="image/*" style="display: none;" />
+          <button type="button" class="modal-btn" style="width: auto; padding: 6px 12px; font-size: 12px;" onclick="document.getElementById('avatar-file-input').click()">Выбрать файл</button>
         </div>
-        <input type="text" id="set-avatar-url" placeholder="https://ссылка-на-картинку.jpg" />
+
+        <div class="color-picker-group">
+          <span>Новый статус:</span>
+        </div>
+        <input type="text" id="set-bio-input" placeholder="Твой статус..." maxlength="25" />
         
         <div class="color-picker-group">
           <span>Основной цвет мессенджера:</span>
@@ -281,16 +286,15 @@
     </div>
   </div>
 
-  <!-- Создание комнаты / сообщества -->
+  <!-- Создание комнаты / сообщества / группы -->
   <div id="room-overlay" class="modal-overlay">
     <div class="modal-box">
-      <h2>Новый чат / Сообщество</h2>
+      <h2>Создать чат</h2>
       <form id="room-form">
-        <input type="text" id="new-room-input" placeholder="Название комнаты..." required maxlength="20" autocomplete="off" />
-        <select id="room-folder-select">
-          <option value="Папка: Общие">Папка: Общие</option>
-          <option value="Папка: Сообщества">Папка: Сообщества</option>
-          <option value="Папка: Группы">Папка: Группы</option>
+        <input type="text" id="new-room-input" placeholder="Название..." required maxlength="20" autocomplete="off" />
+        <select id="room-type-select">
+          <option value="community">Сообщество</option>
+          <option value="group">Группа</option>
         </select>
         <button type="submit" class="modal-btn">Создать</button>
         <button type="button" id="close-room-modal" class="modal-btn cancel-btn">Отмена</button>
@@ -308,15 +312,14 @@
         <div class="brand-title">soon messenger</div>
         <div class="header-actions">
           <button class="icon-btn" id="open-settings-btn" title="Настройки">⚙️</button>
-          <button class="icon-btn" id="theme-switch-btn" title="Сменить тему">🎨</button>
-          <button class="icon-btn" id="open-room-btn" title="Новый чат">+</button>
+          <button class="icon-btn" id="theme-switch-btn" title="Тема">🎨</button>
+          <button class="icon-btn" id="open-room-btn" title="Создать чат">+</button>
         </div>
       </div>
 
-      <!-- Папки для чатов -->
       <div class="folder-title">📁 Общие</div>
       <div class="rooms-list" id="folder-general">
-        <div class="room-item active" data-room="general"><span>🌐</span><span>Общий чат</span></div>
+        <div class="room-item active" data-room="general" onclick="switchRoom('general')"><span>🌐</span><span>Общий чат</span></div>
       </div>
 
       <div class="folder-title">🏰 Сообщества</div>
@@ -325,7 +328,18 @@
       <div class="folder-title">👥 Группы</div>
       <div class="rooms-list" id="folder-groups"></div>
 
-      <div class="section-label">Участники онлайн</div>
+      <!-- Плашка друзей -->
+      <div class="friends-section-box">
+        <div class="folder-title">🤝 Друзья <span id="friend-req-count" class="friend-req-badge" style="display:none;">0</span></div>
+        <div class="friend-actions-row">
+          <input type="text" id="friend-username-input" class="friend-input" placeholder="Логин друга..." />
+          <button type="button" class="friend-add-btn" id="send-friend-btn">Добавить</button>
+        </div>
+        <div id="friend-feedback" style="font-size: 11px; margin-bottom: 4px;"></div>
+        <div class="friends-list" id="friends-list"></div>
+      </div>
+
+      <div class="section-label">Онлайн в чате</div>
       <div class="users-list" id="users-list"></div>
 
       <div class="user-profile-badge" id="open-profile-settings">
@@ -364,7 +378,7 @@
 
       <form id="chat-form" class="chat-form">
         <input type="file" id="file-input" style="display: none;" />
-        <button type="button" class="media-btn" id="attach-btn" title="Прикрепить файл">📎</button>
+        <button type="button" class="media-btn" id="attach-btn" title="Файл">📎</button>
         <button type="button" class="media-btn mic-btn" id="mic-btn" title="Голосовое">🎤</button>
         <input type="text" id="message-input" placeholder="Сообщение..." autocomplete="off" />
         <button type="submit" class="submit-btn">➤</button>
@@ -381,7 +395,8 @@
     let myAvatar = '';
     let currentRoom = 'general';
     let replyingTo = null;
-    let editingMsgId = null;
+    let myFriends = [];
+    let myRequests = [];
 
     const themes = ['dark', 'light', 'midnight'];
     let currentThemeIdx = 0;
@@ -391,18 +406,17 @@
       document.documentElement.setAttribute('data-theme', themes[currentThemeIdx]);
     });
 
-    // Авторизация с проверкой пароля
     const loginForm = document.getElementById('login-form');
     const authError = document.getElementById('auth-error');
 
     loginForm.addEventListener('submit', (e) => {
       e.preventDefault();
-      const username = document.getElementById('username-input').value.trim();
+      myUsername = document.getElementById('username-input').value.trim();
       const password = document.getElementById('password-input').value.trim();
-      const bio = document.getElementById('bio-input').value.trim();
-      const color = document.getElementById('color-input').value;
+      myBio = document.getElementById('bio-input').value.trim() || 'В сети';
+      myColor = document.getElementById('color-input').value;
 
-      socket.emit('auth user', { username, password, bio, color });
+      socket.emit('auth user', { username: myUsername, password, bio: myBio, color: myColor });
     });
 
     socket.on('auth error', (msg) => {
@@ -411,7 +425,6 @@
     });
 
     socket.on('auth success', (accData) => {
-      myUsername = document.getElementById('username-input').value.trim();
       myBio = accData.bio;
       myColor = accData.color;
       myAvatar = accData.avatar || `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(myUsername)}`;
@@ -421,10 +434,80 @@
       document.getElementById('login-overlay').classList.remove('active');
     });
 
-    // Настройки приложения
+    socket.on('sync user data', (data) => {
+      myFriends = data.friends || [];
+      myRequests = data.friendRequests || [];
+      if (data.avatar) myAvatar = data.avatar;
+      updateFriendsUI();
+      updateProfileBadge();
+    });
+
+    // Система друзей
+    document.getElementById('send-friend-btn').addEventListener('click', () => {
+      const friendName = document.getElementById('friend-username-input').value.trim();
+      if (friendName) {
+        socket.emit('send friend request', { from: myUsername, to: friendName });
+        document.getElementById('friend-username-input').value = '';
+      }
+    });
+
+    socket.on('friend error', (msg) => {
+      const fb = document.getElementById('friend-feedback');
+      fb.style.color = '#ef4444';
+      fb.textContent = msg;
+      setTimeout(() => fb.textContent = '', 3000);
+    });
+
+    socket.on('friend success', (msg) => {
+      const fb = document.getElementById('friend-feedback');
+      fb.style.color = '#22c55e';
+      fb.textContent = msg;
+      setTimeout(() => fb.textContent = '', 3000);
+    });
+
+    function updateFriendsUI() {
+      const list = document.getElementById('friends-list');
+      const badge = document.getElementById('friend-req-count');
+      list.innerHTML = '';
+
+      if (myRequests.length > 0) {
+        badge.style.display = 'inline-block';
+        badge.textContent = myRequests.length;
+        myRequests.forEach(req => {
+          const div = document.createElement('div');
+          div.classList.add('friend-row');
+          div.innerHTML = `<span style="font-size:11px;">⚠️ ${req} хочет в друзья</span> <button onclick="socket.emit('accept friend request', {username: '${myUsername}', friend: '${req}'})" style="background:#22c55e;border:none;color:#fff;border-radius:4px;padding:2px 6px;cursor:pointer;">✓</button> <button onclick="socket.emit('reject friend request', {username: '${myUsername}', friend: '${req}'})" style="background:#ef4444;border:none;color:#fff;border-radius:4px;padding:2px 6px;cursor:pointer;">✕</button>`;
+          list.appendChild(div);
+        });
+      } else {
+        badge.style.display = 'none';
+      }
+
+      myFriends.forEach(f => {
+        const div = document.createElement('div');
+        div.classList.add('friend-row');
+        div.innerHTML = `<div class="user-status-dot"></div><span>${f} (Друг)</span>`;
+        list.appendChild(div);
+      });
+    }
+
+    // Загрузка аватара из файлов в настройках
+    let tempNewAvatar = '';
+    document.getElementById('avatar-file-input').addEventListener('change', (e) => {
+      if (e.target.files[0]) {
+        const reader = new FileReader();
+        reader.onload = (evt) => {
+          tempNewAvatar = evt.target.result;
+          alert('Фоторафия загружена! Нажмите "Сохранить".');
+        };
+        reader.readAsDataURL(e.target.files[0]);
+      }
+    });
+
     const settingsOverlay = document.getElementById('settings-overlay');
     document.getElementById('open-settings-btn').addEventListener('click', () => {
-      document.getElementById('set-avatar-url').value = myAvatar;
+      tempNewAvatar = '';
+      document.getElementById('set-bio-input').value = myBio;
       document.getElementById('set-accent-color').value = myColor;
       settingsOverlay.classList.add('active');
     });
@@ -433,15 +516,15 @@
 
     document.getElementById('settings-form').addEventListener('submit', (e) => {
       e.preventDefault();
-      const newAvatar = document.getElementById('set-avatar-url').value.trim();
-      const newAccent = document.getElementById('set-accent-color').value;
+      if (tempNewAvatar) myAvatar = tempNewAvatar;
+      myBio = document.getElementById('set-bio-input').value.trim() || myBio;
+      myColor = document.getElementById('set-accent-color').value;
       const fontSize = document.getElementById('set-font-size').value;
 
-      if (newAvatar) myAvatar = newAvatar;
-      myColor = newAccent;
       document.documentElement.style.setProperty('--accent-custom', myColor);
       document.documentElement.setAttribute('data-font', fontSize);
 
+      socket.emit('update profile', { username: myUsername, bio: myBio, color: myColor, avatar: myAvatar });
       updateProfileBadge();
       settingsOverlay.classList.remove('active');
     });
@@ -458,53 +541,66 @@
     document.getElementById('mobile-menu-btn').addEventListener('click', () => { sidebar.classList.add('mobile-open'); sidebarBackdrop.classList.add('active'); });
     sidebarBackdrop.addEventListener('click', () => { sidebar.classList.remove('mobile-open'); sidebarBackdrop.classList.remove('active'); });
 
-    // Создание комнат по папкам (Сообщества и Группы)
+    // Создание комнат (сообщества / группы)
     const roomOverlay = document.getElementById('room-overlay');
     document.getElementById('open-room-btn').addEventListener('click', () => { document.getElementById('new-room-input').value = ''; roomOverlay.classList.add('active'); });
     document.getElementById('close-room-modal').addEventListener('click', () => roomOverlay.classList.remove('active'));
 
     document.getElementById('room-form').addEventListener('submit', (e) => {
       e.preventDefault();
-      const targetRoom = document.getElementById('new-room-input').value.trim().toLowerCase();
-      const folderType = document.getElementById('room-folder-select').value;
-      
-      if (targetRoom) {
-        if (targetRoom === currentRoom) return;
-        currentRoom = targetRoom;
-        socket.emit('change room', currentRoom);
-        document.getElementById('chat-window').innerHTML = '';
-        document.getElementById('current-room-title').textContent = currentRoom;
-
-        // Добавляем в нужную папку визуально
-        const item = document.createElement('div');
-        item.classList.add('room-item', 'active');
-        item.setAttribute('data-room', currentRoom);
-        item.innerHTML = `<span>💬</span><span>${currentRoom}</span>`;
-        item.addEventListener('click', () => switchRoom(currentRoom));
-
-        if (folderType.includes('Сообщества')) {
-          document.getElementById('folder-communities').appendChild(item);
-        } else if (folderType.includes('Группы')) {
-          document.getElementById('folder-groups').appendChild(item);
-        } else {
-          document.getElementById('folder-general').appendChild(item);
-        }
-
-        sidebar.classList.remove('mobile-open');
-        sidebarBackdrop.classList.remove('active');
+      const name = document.getElementById('new-room-input').value.trim();
+      const type = document.getElementById('room-type-select').value;
+      if (name) {
+        socket.emit('create room', { name, type });
+        roomOverlay.classList.remove('active');
       }
-      roomOverlay.classList.remove('active');
     });
 
-    function switchRoom(room) {
+    socket.on('rooms list', (rooms) => {
+      renderRooms(rooms);
+    });
+
+    socket.on('room created', (room) => {
+      appendRoomElement(room);
+    });
+
+    function renderRooms(rooms) {
+      document.getElementById('folder-communities').innerHTML = '';
+      document.getElementById('folder-groups').innerHTML = '';
+      Object.keys(rooms).forEach(key => {
+        if (key !== 'general') appendRoomElement(rooms[key]);
+      });
+    }
+
+    function appendRoomElement(room) {
+      const containerId = room.type === 'community' ? 'folder-communities' : 'folder-groups';
+      const container = document.getElementById(containerId);
+      if (!container) return;
+
+      const item = document.createElement('div');
+      item.classList.add('room-item');
+      if (room.name.toLowerCase() === currentRoom) item.classList.add('active');
+      item.setAttribute('data-room', room.name.toLowerCase());
+      item.innerHTML = `<span>${room.type === 'community' ? '🏰' : '👥'}</span><span>${room.name}</span>`;
+      item.addEventListener('click', () => switchRoom(room.name.toLowerCase()));
+      container.appendChild(item);
+    }
+
+    window.switchRoom = (room) => {
       if (room === currentRoom) return;
       currentRoom = room;
       socket.emit('change room', currentRoom);
       document.getElementById('chat-window').innerHTML = '';
       document.getElementById('current-room-title').textContent = currentRoom;
+      
+      document.querySelectorAll('.room-item').forEach(el => {
+        if (el.getAttribute('data-room') === room) el.classList.add('active');
+        else el.classList.remove('active');
+      });
+
       sidebar.classList.remove('mobile-open');
       sidebarBackdrop.classList.remove('active');
-    }
+    };
 
     // Поиск
     const searchToggleBtn = document.getElementById('search-toggle-btn');
@@ -527,7 +623,7 @@
       });
     });
 
-    // Отправка файлов любого формата
+    // Файлы
     const fileInput = document.getElementById('file-input');
     document.getElementById('attach-btn').addEventListener('click', () => fileInput.click());
     fileInput.addEventListener('change', (e) => {
@@ -625,7 +721,6 @@
       wrapper.classList.add('message-wrapper', isMy ? 'my' : 'other');
       wrapper.setAttribute('data-msg-id', data.msgId);
 
-      // Расширенный набор реакций
       let pickerHtml = '<div class="reaction-picker">';
       ['👍', '❤️', '🔥', '😂', '😮', '😢', '👏', '🚀', '🎉', '💩'].forEach(emoji => {
         pickerHtml += `<button class="reaction-btn" onclick="sendReaction('${data.msgId}', '${emoji}')">${emoji}</button>`;
@@ -645,7 +740,7 @@
         bodyHtml = `<a href="${data.fileUrl}" download="${data.fileName}" class="file-attachment">📁 ${data.fileName}</a>`;
       } else {
         let parsedText = data.text.replace(/\|\|(.*?)\|\|/g, '<span class="spoiler" onclick="this.classList.toggle(\'revealed\')">$1</span>');
-        bodyHtml = `<span class="msg-text">${parsedText}</span><span class="edited-tag"></span>`;
+        bodyHtml = `<span class="msg-text">${parsedText}</span>`;
       }
 
       wrapper.innerHTML = `
@@ -667,7 +762,7 @@
         if (['IMG', 'VIDEO', 'AUDIO', 'SPAN', 'BUTTON', 'A'].includes(e.target.tagName)) return;
         e.stopPropagation();
         
-        replyingTo = { name: data.name, text: data.type === 'text' ? data.text : '[Медиа/Файл]' };
+        replyingTo = { name: data.name, text: data.type === 'text' ? data.text : '[Файл]' };
         document.getElementById('replying-to-text').textContent = `${replyingTo.name}: ${replyingTo.text}`;
         replyingBar.classList.add('active');
         messageInput.focus();
@@ -737,6 +832,7 @@
     socket.on('update users list', (users) => {
       const uList = document.getElementById('users-list');
       uList.innerHTML = '';
+      users.users = users;
       users.forEach(u => {
         const row = document.createElement('div');
         row.classList.add('user-row');
