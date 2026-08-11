@@ -34,7 +34,6 @@
     body::before { background: #7c3aed; top: 5%; left: 5%; }
     body::after { background: #2563eb; bottom: 5%; right: 5%; }
 
-    /* Модалки */
     .modal-overlay {
       position: fixed;
       inset: 0;
@@ -49,7 +48,6 @@
       transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       padding: 20px;
     }
-
     .modal-overlay.active { opacity: 1; pointer-events: auto; }
 
     .modal-box {
@@ -61,501 +59,191 @@
       max-width: 340px;
       text-align: center;
       box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
-      transform: scale(0.9) translateY(20px);
-      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
-
-    .modal-overlay.active .modal-box { transform: scale(1) translateY(0); }
-
     .modal-box h2 {
-      font-size: 20px;
-      font-weight: 800;
-      margin-bottom: 6px;
+      font-size: 20px; font-weight: 800; margin-bottom: 6px;
       background: linear-gradient(135deg, #c084fc, #6366f1);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
     }
-
     .modal-box p { font-size: 13px; color: #94a3b8; margin-bottom: 18px; }
-    
     .modal-box input {
-      width: 100%;
-      padding: 12px 14px;
-      border-radius: 12px;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      background: rgba(255, 255, 255, 0.04);
-      color: #fff;
-      outline: none;
-      margin-bottom: 12px;
-      font-size: 14px;
+      width: 100%; padding: 12px 14px; border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.08); background: rgba(255, 255, 255, 0.04);
+      color: #fff; outline: none; margin-bottom: 12px; font-size: 14px;
     }
-
-    .modal-box input:focus { border-color: #818cf8; background: rgba(255, 255, 255, 0.08); }
-
     .modal-btn {
-      width: 100%;
-      padding: 12px;
-      border-radius: 12px;
-      border: none;
-      background: linear-gradient(135deg, #6366f1, #9333ea);
-      color: white;
-      font-weight: 700;
-      cursor: pointer;
-      font-size: 14px;
+      width: 100%; padding: 12px; border-radius: 12px; border: none;
+      background: linear-gradient(135deg, #6366f1, #9333ea); color: white;
+      font-weight: 700; cursor: pointer; font-size: 14px;
     }
-
     .cancel-btn { background: transparent; border: 1px solid rgba(255,255,255,0.1); color: #94a3b8; margin-top: 8px; }
 
-    /* Просмотрщик полноэкранных изображений */
     .image-modal {
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.9);
-      backdrop-filter: blur(10px);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      z-index: 1000;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.25s ease;
+      position: fixed; inset: 0; background: rgba(0, 0, 0, 0.9); backdrop-filter: blur(10px);
+      display: flex; justify-content: center; align-items: center; z-index: 1000; opacity: 0; pointer-events: none; transition: opacity 0.25s ease;
     }
-
     .image-modal.active { opacity: 1; pointer-events: auto; }
+    .image-modal img { max-width: 90%; max-height: 90%; border-radius: 16px; }
 
-    .image-modal img {
-      max-width: 90%;
-      max-height: 90%;
-      border-radius: 16px;
-      box-shadow: 0 10px 40px rgba(0,0,0,0.8);
-    }
-
-    /* Главный двухпанельный контейнер */
     .app-container {
-      width: 100%;
-      max-width: 820px;
-      height: 100%;
-      max-height: 650px;
-      background: rgba(15, 23, 42, 0.75);
-      backdrop-filter: blur(24px);
-      border-radius: 24px;
-      display: flex;
-      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6);
-      overflow: hidden;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      z-index: 1;
-      position: relative;
+      width: 100%; max-width: 860px; height: 100%; max-height: 650px;
+      background: rgba(15, 23, 42, 0.75); backdrop-filter: blur(24px); border-radius: 24px;
+      display: flex; box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6); overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.08); z-index: 1; position: relative;
     }
 
-    /* Затенок для мобильной панели */
     .sidebar-backdrop {
-      display: none;
-      position: absolute;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.5);
-      backdrop-filter: blur(4px);
-      z-index: 9;
-      opacity: 0;
-      transition: opacity 0.3s ease;
+      display: none; position: absolute; inset: 0; background: rgba(0, 0, 0, 0.5); backdrop-filter: blur(4px); z-index: 9; opacity: 0; transition: opacity 0.3s ease;
     }
-
     .sidebar-backdrop.active { display: block; opacity: 1; }
 
-    /* Боковая панель */
     .sidebar {
-      width: 260px;
-      background: rgba(11, 17, 31, 0.85);
-      border-right: 1px solid rgba(255, 255, 255, 0.06);
-      display: flex;
-      flex-direction: column;
-      padding: 18px 14px;
-      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      z-index: 10;
+      width: 260px; background: rgba(11, 17, 31, 0.85); border-right: 1px solid rgba(255, 255, 255, 0.06);
+      display: flex; flex-direction: column; padding: 18px 14px; transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1); z-index: 10;
     }
-
-    .sidebar-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 16px;
-      padding: 0 4px;
-    }
-
+    .sidebar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; padding: 0 4px; }
     .brand-title {
-      font-weight: 800;
-      font-size: 17px;
+      font-weight: 800; font-size: 17px;
       background: linear-gradient(135deg, #c084fc, #6366f1);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
     }
-
     .header-actions { display: flex; gap: 8px; align-items: center; }
-
     .add-room-btn, .close-sidebar-btn {
-      background: rgba(99, 102, 241, 0.2);
-      border: 1px solid rgba(99, 102, 241, 0.3);
-      color: #c084fc;
-      width: 32px;
-      height: 32px;
-      border-radius: 10px;
-      font-size: 16px;
-      font-weight: bold;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      background: rgba(99, 102, 241, 0.2); border: 1px solid rgba(99, 102, 241, 0.3);
+      color: #c084fc; width: 32px; height: 32px; border-radius: 10px; font-size: 16px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center;
     }
+    .close-sidebar-btn { display: none; background: rgba(255, 255, 255, 0.05); color: #94a3b8; }
 
-    .close-sidebar-btn { display: none; background: rgba(255, 255, 255, 0.05); border-color: rgba(255, 255, 255, 0.1); color: #94a3b8; }
-
-    .section-label {
-      font-size: 11px;
-      font-weight: 700;
-      color: #64748b;
-      text-transform: uppercase;
-      letter-spacing: 0.8px;
-      margin-bottom: 8px;
-      padding: 0 6px;
-    }
-
-    .rooms-list {
-      flex: 1;
-      overflow-y: auto;
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-
+    .section-label { font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 8px; padding: 0 6px; }
+    .rooms-list { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 6px; }
     .room-item {
-      padding: 10px 12px;
-      border-radius: 12px;
-      font-size: 13px;
-      font-weight: 600;
-      color: #94a3b8;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      border: 1px solid transparent;
-      transition: 0.2s;
+      padding: 10px 12px; border-radius: 12px; font-size: 13px; font-weight: 600; color: #94a3b8;
+      cursor: pointer; display: flex; align-items: center; gap: 10px; border: 1px solid transparent; transition: 0.2s;
     }
-
     .room-item.active {
       background: linear-gradient(135deg, rgba(99, 102, 241, 0.25), rgba(168, 85, 247, 0.15));
-      border: 1px solid rgba(99, 102, 241, 0.3);
-      color: #fff;
+      border: 1px solid rgba(99, 102, 241, 0.3); color: #fff;
     }
 
-    .user-profile-badge {
-      padding-top: 12px;
-      border-top: 1px solid rgba(255, 255, 255, 0.06);
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
+    .user-profile-badge { padding-top: 12px; border-top: 1px solid rgba(255, 255, 255, 0.06); display: flex; align-items: center; gap: 10px; }
+    .profile-avatar { width: 32px; height: 32px; border-radius: 10px; background-size: cover; border: 1px solid rgba(255,255,255,0.1); position: relative; }
+    .online-dot { position: absolute; bottom: -2px; right: -2px; width: 10px; height: 10px; background: #22c55e; border-radius: 50%; border: 2px solid #0b111f; }
+    .profile-name { font-size: 13px; font-weight: 700; color: #e2e8f0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-    .profile-avatar {
-      width: 32px;
-      height: 32px;
-      border-radius: 10px;
-      background-size: cover;
-      border: 1px solid rgba(255,255,255,0.1);
-    }
-
-    .profile-name {
-      font-size: 13px;
-      font-weight: 700;
-      color: #e2e8f0;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    /* Область чата */
-    .chat-area {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      width: 100%;
-      min-width: 0;
-      position: relative;
-    }
-
-    /* Подсветка Drag and Drop перетаскивания картинок */
-    .chat-area.drag-over::after {
-      content: '📸 Отпустите изображение для отправки';
-      position: absolute;
-      inset: 0;
-      background: rgba(99, 102, 241, 0.85);
-      backdrop-filter: blur(8px);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-size: 18px;
-      font-weight: 700;
-      z-index: 50;
-      border: 3px dashed #fff;
-      border-radius: 20px;
-      margin: 10px;
-    }
-
+    .chat-area { flex: 1; display: flex; flex-direction: column; width: 100%; min-width: 0; position: relative; }
+    
     .chat-header {
-      padding: 14px 16px;
-      background: rgba(15, 23, 42, 0.4);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-      display: flex;
-      align-items: center;
-      gap: 10px;
+      padding: 14px 16px; background: rgba(15, 23, 42, 0.4);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06); display: flex; align-items: center; justify-content: space-between; gap: 10px;
     }
-
-    .mobile-menu-btn {
-      display: none;
-      background: rgba(255, 255, 255, 0.08);
-      border: none;
-      color: #fff;
-      padding: 6px 10px;
-      border-radius: 8px;
-      font-size: 16px;
-      cursor: pointer;
-    }
-
+    .header-left { display: flex; align-items: center; gap: 10px; }
+    .mobile-menu-btn { display: none; background: rgba(255, 255, 255, 0.08); border: none; color: #fff; padding: 6px 10px; border-radius: 8px; font-size: 16px; cursor: pointer; }
     .current-room-title { font-weight: 700; font-size: 15px; color: #f8fafc; }
 
-    .chat-window {
-      flex: 1;
-      padding: 16px;
-      overflow-y: auto;
+    /* Переключатель секретного режима (ТГ стайл) */
+    .secret-toggle-btn {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #94a3b8;
+      padding: 6px 12px;
+      border-radius: 10px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
       display: flex;
-      flex-direction: column;
-      gap: 12px;
+      align-items: center;
+      gap: 6px;
+      transition: 0.2s;
     }
+    .secret-toggle-btn.active {
+      background: rgba(239, 68, 68, 0.2);
+      border-color: rgba(239, 68, 68, 0.4);
+      color: #fca5a5;
+    }
+
+    .chat-window { flex: 1; padding: 16px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; }
 
     .system-message {
-      align-self: center;
-      font-size: 11px;
-      color: #94a3b8;
-      background: rgba(255, 255, 255, 0.04);
-      padding: 4px 12px;
-      border-radius: 20px;
-      border: 1px solid rgba(255, 255, 255, 0.05);
-      text-align: center;
+      align-self: center; font-size: 11px; color: #94a3b8; background: rgba(255, 255, 255, 0.04);
+      padding: 4px 12px; border-radius: 20px; border: 1px solid rgba(255, 255, 255, 0.05); text-align: center;
     }
 
-    /* Сообщения */
-    .message-wrapper {
-      display: flex;
-      gap: 8px;
-      max-width: 88%;
-      animation: msgPop 0.25s ease-out forwards;
-      position: relative;
-    }
-
+    .message-wrapper { display: flex; gap: 8px; max-width: 88%; animation: msgPop 0.25s ease-out forwards; position: relative; }
     .message-wrapper.other { align-self: flex-start; }
     .message-wrapper.my { align-self: flex-end; flex-direction: row-reverse; }
 
-    .avatar {
-      width: 32px;
-      height: 32px;
-      border-radius: 10px;
-      background-size: cover;
-      flex-shrink: 0;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      background-color: #1e293b;
-    }
-
+    .avatar { width: 32px; height: 32px; border-radius: 10px; background-size: cover; flex-shrink: 0; border: 1px solid rgba(255, 255, 255, 0.1); background-color: #1e293b; }
     .message-content { display: flex; flex-direction: column; position: relative; max-width: 100%; }
 
     .username { font-size: 11px; color: #c084fc; margin-bottom: 3px; font-weight: 600; }
     .message-wrapper.my .username { text-align: right; color: #818cf8; }
 
     .message {
-      padding: 10px 14px;
-      border-radius: 16px;
-      font-size: 14px;
-      line-height: 1.4;
-      word-break: break-word;
-      position: relative;
-      cursor: pointer;
+      padding: 10px 14px; border-radius: 16px; font-size: 14px; line-height: 1.4; word-break: break-word; position: relative; cursor: pointer;
+    }
+    .message-wrapper.other .message { background: rgba(255, 255, 255, 0.07); border: 1px solid rgba(255, 255, 255, 0.05); color: #f1f5f9; border-top-left-radius: 4px; }
+    .message-wrapper.my .message { background: linear-gradient(135deg, #6366f1, #8b5cf6); color: #ffffff; border-top-right-radius: 4px; }
+    
+    /* Секретное сообщение (шифрованное / с таймером сгорания) */
+    .message.encrypted {
+      border: 1px dashed #ef4444;
+      background: rgba(239, 68, 68, 0.1);
+    }
+    .burn-timer {
+      font-size: 10px; color: #ef4444; font-weight: bold; margin-top: 2px; text-align: right;
     }
 
-    .message-wrapper.other .message {
-      background: rgba(255, 255, 255, 0.07);
-      border: 1px solid rgba(255, 255, 255, 0.05);
-      color: #f1f5f9;
-      border-top-left-radius: 4px;
+    /* Упоминание (ДС стайл) */
+    .mention {
+      background: rgba(99, 102, 241, 0.3); color: #c7d2fe; padding: 1px 5px; border-radius: 6px; font-weight: 600;
     }
 
-    .message-wrapper.my .message {
-      background: linear-gradient(135deg, #6366f1, #8b5cf6);
-      color: #ffffff;
-      border-top-right-radius: 4px;
-    }
+    .chat-img { max-width: 240px; max-height: 240px; border-radius: 12px; cursor: pointer; margin-top: 4px; display: block; border: 1px solid rgba(255,255,255,0.1); }
+    .chat-audio { margin-top: 4px; max-width: 220px; height: 36px; border-radius: 20px; outline: none; }
 
-    /* Стиль медиа-контента в сообщениях */
-    .chat-img {
-      max-width: 240px;
-      max-height: 240px;
-      border-radius: 12px;
-      cursor: pointer;
-      margin-top: 4px;
-      display: block;
-      border: 1px solid rgba(255,255,255,0.1);
-      transition: transform 0.2s;
-    }
-
-    .chat-img:hover { transform: scale(1.02); }
-
-    .chat-audio {
-      margin-top: 4px;
-      max-width: 220px;
-      height: 36px;
-      border-radius: 20px;
-      outline: none;
-    }
-
-    /* Эмодзи пикер */
     .reaction-picker {
-      position: absolute;
-      top: -36px;
-      background: rgba(15, 23, 42, 0.95);
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      border-radius: 20px;
-      padding: 2px 6px;
-      display: flex;
-      gap: 4px;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.5);
-      opacity: 0;
-      pointer-events: none;
-      transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      z-index: 5;
+      position: absolute; top: -36px; background: rgba(15, 23, 42, 0.95); border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 20px; padding: 2px 6px; display: flex; gap: 4px; box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+      opacity: 0; pointer-events: none; transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); z-index: 5;
     }
-
     .message-wrapper.other .reaction-picker { left: 0; }
     .message-wrapper.my .reaction-picker { right: 0; }
+    .message-wrapper:hover .reaction-picker, .message-wrapper.active-picker .reaction-picker { opacity: 1; pointer-events: auto; transform: translateY(-4px); }
+    .reaction-btn { background: transparent; border: none; font-size: 15px; cursor: pointer; padding: 2px 4px; border-radius: 8px; }
 
-    .message-wrapper:hover .reaction-picker,
-    .message-wrapper.active-picker .reaction-picker {
-      opacity: 1;
-      pointer-events: auto;
-      transform: translateY(-4px);
-    }
-
-    .reaction-btn {
-      background: transparent;
-      border: none;
-      font-size: 15px;
-      cursor: pointer;
-      padding: 2px 4px;
-      border-radius: 8px;
-    }
-
-    .reactions-badge-container {
-      display: flex;
-      gap: 4px;
-      margin-top: 4px;
-      flex-wrap: wrap;
-    }
-
+    .reactions-badge-container { display: flex; gap: 4px; margin-top: 4px; flex-wrap: wrap; }
     .message-wrapper.my .reactions-badge-container { justify-content: flex-end; }
-
-    .reaction-badge {
-      font-size: 11px;
-      background: rgba(255, 255, 255, 0.08);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      padding: 1px 6px;
-      border-radius: 10px;
-      display: inline-flex;
-      align-items: center;
-      gap: 3px;
-      color: #e2e8f0;
-    }
+    .reaction-badge { font-size: 11px; background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.1); padding: 1px 6px; border-radius: 10px; display: inline-flex; align-items: center; gap: 3px; color: #e2e8f0; }
 
     .message-time { font-size: 10px; color: #64748b; margin-top: 3px; align-self: flex-end; }
     .message-wrapper.my .message-time { align-self: flex-start; color: rgba(255, 255, 255, 0.6); }
 
     .typing-indicator { font-size: 11px; color: #818cf8; padding: 0 16px 6px; height: 18px; font-style: italic; }
 
-    /* Форма ввода медиа-панель */
-    .chat-form {
-      display: flex;
-      padding: 12px 14px;
-      background: rgba(15, 23, 42, 0.4);
-      border-top: 1px solid rgba(255, 255, 255, 0.06);
-      gap: 8px;
-      align-items: center;
-    }
-
+    .chat-form { display: flex; padding: 12px 14px; background: rgba(15, 23, 42, 0.4); border-top: 1px solid rgba(255, 255, 255, 0.06); gap: 8px; align-items: center; }
     .chat-form input[type="text"] {
-      flex: 1;
-      padding: 10px 14px;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      background: rgba(255, 255, 255, 0.04);
-      color: #fff;
-      border-radius: 12px;
-      outline: none;
-      font-size: 14px;
-      min-width: 0;
+      flex: 1; padding: 10px 14px; border: 1px solid rgba(255, 255, 255, 0.08); background: rgba(255, 255, 255, 0.04);
+      color: #fff; border-radius: 12px; outline: none; font-size: 14px; min-width: 0;
     }
-
     .media-btn {
-      background: rgba(255, 255, 255, 0.06);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      color: #a5b4fc;
-      width: 38px;
-      height: 38px;
-      border-radius: 12px;
-      font-size: 16px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-      transition: all 0.2s;
+      background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.08); color: #a5b4fc;
+      width: 38px; height: 38px; border-radius: 12px; font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
     }
+    .media-btn.recording { background: #ef4444 !important; color: white !important; }
+    .submit-btn { padding: 10px 16px; background: linear-gradient(135deg, #6366f1, #a855f7); color: white; border: none; border-radius: 12px; font-weight: 700; cursor: pointer; height: 38px; }
 
-    .media-btn:hover { background: rgba(99, 102, 241, 0.2); color: #fff; }
-
-    /* Кнопка записи микрофона (Анимированная) */
-    .mic-btn.recording {
-      background: #ef4444 !important;
-      color: white !important;
-      animation: pulseMic 1s infinite alternate;
-    }
-
-    @keyframes pulseMic {
-      0% { transform: scale(1); box-shadow: 0 0 0 rgba(239, 68, 68, 0.4); }
-      100% { transform: scale(1.08); box-shadow: 0 0 12px rgba(239, 68, 68, 0.8); }
-    }
-
-    .submit-btn {
-      padding: 10px 16px;
-      background: linear-gradient(135deg, #6366f1, #a855f7);
-      color: white;
-      border: none;
-      border-radius: 12px;
-      font-weight: 700;
-      cursor: pointer;
-      flex-shrink: 0;
-      height: 38px;
-    }
-
-    @keyframes msgPop {
-      from { opacity: 0; transform: scale(0.95) translateY(8px); }
-      to { opacity: 1; transform: scale(1) translateY(0); }
-    }
+    @keyframes msgPop { from { opacity: 0; transform: scale(0.95) translateY(8px); } to { opacity: 1; transform: scale(1) translateY(0); } }
 
     @media (max-width: 768px) {
       .app-container { border-radius: 0; height: 100%; max-height: 100dvh; border: none; }
       .mobile-menu-btn, .close-sidebar-btn { display: flex; }
       .sidebar { position: absolute; top: 0; left: 0; height: 100%; width: 260px; transform: translateX(-100%); box-shadow: 10px 0 30px rgba(0,0,0,0.6); }
       .sidebar.mobile-open { transform: translateX(0); }
-      .chat-img { max-width: 180px; }
     }
   </style>
 </head>
 <body>
 
-  <!-- Вход -->
   <div id="login-overlay" class="modal-overlay active">
     <div class="modal-box">
       <h2>soon messenger</h2>
@@ -567,7 +255,6 @@
     </div>
   </div>
 
-  <!-- Новая комната -->
   <div id="room-overlay" class="modal-overlay">
     <div class="modal-box">
       <h2>Новый чат</h2>
@@ -580,7 +267,6 @@
     </div>
   </div>
 
-  <!-- Окно полноэкранного фото -->
   <div class="image-modal" id="image-modal">
     <img id="full-image" src="" alt="Full view" />
   </div>
@@ -598,42 +284,42 @@
       </div>
 
       <div class="section-label">Ваши чаты</div>
-      
       <div class="rooms-list" id="rooms-list">
         <div class="room-item active" data-room="general">
-          <span>🌐</span>
-          <span>Общий чат</span>
+          <span>🌐</span><span>Общий чат</span>
         </div>
       </div>
 
       <div class="user-profile-badge">
-        <div class="profile-avatar" id="my-profile-avatar"></div>
+        <div class="profile-avatar" id="my-profile-avatar"><div class="online-dot"></div></div>
         <div class="profile-name" id="my-profile-name">Гость</div>
       </div>
     </div>
 
     <div class="chat-area" id="chat-area">
       <div class="chat-header">
-        <button class="mobile-menu-btn" id="mobile-menu-btn">☰</button>
-        <span id="current-room-icon">🌐</span>
-        <div class="current-room-title" id="current-room-title">Общий чат</div>
+        <div class="header-left">
+          <button class="mobile-menu-btn" id="mobile-menu-btn">☰</button>
+          <span id="current-room-icon">🌐</span>
+          <div class="current-room-title" id="current-room-title">Общий чат</div>
+        </div>
+        <!-- Кнопка секретного шифрования -->
+        <button class="secret-toggle-btn" id="secret-toggle-btn" title="Включить шифрование и самоуничтожение">
+          🔒 <span id="secret-text">Секретный режим</span>
+        </button>
       </div>
 
       <div id="chat-window" class="chat-window"></div>
       <div id="typing-indicator" class="typing-indicator"></div>
 
       <form id="chat-form" class="chat-form">
-        <!-- Скрытый инпут файлов -->
         <input type="file" id="file-input" accept="image/*" style="display: none;" />
-        
-        <button type="button" class="media-btn" id="attach-btn" title="Отправить картинку">📎</button>
-        <button type="button" class="media-btn mic-btn" id="mic-btn" title="Записать голосовое">🎤</button>
-
+        <button type="button" class="media-btn" id="attach-btn" title="Картинка">📎</button>
+        <button type="button" class="media-btn mic-btn" id="mic-btn" title="Голосовое">🎤</button>
         <input type="text" id="message-input" placeholder="Напишите сообщение..." autocomplete="off" />
         <button type="submit" class="submit-btn">Отправить</button>
       </form>
     </div>
-
   </div>
 
   <script src="/socket.io/socket.io.js"></script>
@@ -643,8 +329,8 @@
     let myAvatar = '';
     let currentRoom = 'general';
     const joinedRooms = new Set(['general']);
+    let isSecretMode = false; // Флаг секретного режима
 
-    // UI
     const loginOverlay = document.getElementById('login-overlay');
     const loginForm = document.getElementById('login-form');
     const usernameInput = document.getElementById('username-input');
@@ -663,6 +349,8 @@
     const roomsList = document.getElementById('rooms-list');
     const currentRoomTitle = document.getElementById('current-room-title');
     const currentRoomIcon = document.getElementById('current-room-icon');
+    const secretToggleBtn = document.getElementById('secret-toggle-btn');
+    const secretText = document.getElementById('secret-text');
 
     const myProfileName = document.getElementById('my-profile-name');
     const myProfileAvatar = document.getElementById('my-profile-avatar');
@@ -676,26 +364,55 @@
     const fileInput = document.getElementById('file-input');
     const attachBtn = document.getElementById('attach-btn');
     const micBtn = document.getElementById('mic-btn');
-
     const imageModal = document.getElementById('image-modal');
     const fullImage = document.getElementById('full-image');
-
     const EMOJIS = ['👍', '❤️', '🔥', '😂', '😮'];
+
+    // Простейшее шифрование строк в браузере (Base64 + XOR с ключом комнаты для примера шифра)
+    function encryptText(text, room) {
+      const key = room + "secret_key_99";
+      let result = "";
+      for (let i = 0; i < text.length; i++) {
+        result += String.fromCharCode(text.charCodeAt(i) ^ key.charCodeAt(i % key.length));
+      }
+      return btoa(unescape(encodeURIComponent(result)));
+    }
+
+    function decryptText(encoded, room) {
+      try {
+        const text = decodeURIComponent(escape(atob(encoded)));
+        const key = room + "secret_key_99";
+        let result = "";
+        for (let i = 0; i < text.length; i++) {
+          result += String.fromCharCode(text.charCodeAt(i) ^ key.charCodeAt(i % key.length));
+        }
+        return result;
+      } catch(e) {
+        return "[Ошибка расшифровки]";
+      }
+    }
+
+    // Переключение секретного режима
+    secretToggleBtn.addEventListener('click', () => {
+      isSecretMode = !isSecretMode;
+      if (isSecretMode) {
+        secretToggleBtn.classList.add('active');
+        secretText.textContent = 'Режим выжигания (Вкл)';
+      } else {
+        secretToggleBtn.classList.remove('active');
+        secretText.textContent = 'Секретный режим';
+      }
+    });
 
     function playPopSound() {
       try {
         const ctx = new (window.AudioContext || window.webkitAudioContext)();
         const osc = ctx.createOscillator();
         const gain = ctx.createGain();
-        osc.type = 'sine';
-        osc.frequency.setValueAtTime(600, ctx.currentTime);
+        osc.type = 'sine'; osc.frequency.setValueAtTime(600, ctx.currentTime);
         osc.frequency.exponentialRampToValueAtTime(800, ctx.currentTime + 0.1);
-        gain.gain.setValueAtTime(0.1, ctx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.1);
-        osc.connect(gain);
-        gain.connect(ctx.destination);
-        osc.start();
-        osc.stop(ctx.currentTime + 0.1);
+        gain.gain.setValueAtTime(0.1, ctx.currentTime); gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.1);
+        osc.connect(gain); gain.connect(ctx.destination); osc.start(); osc.stop(ctx.currentTime + 0.1);
       } catch(e) {}
     }
 
@@ -714,7 +431,6 @@
 
     function openSidebar() { sidebar.classList.add('mobile-open'); sidebarBackdrop.classList.add('active'); }
     function closeSidebar() { sidebar.classList.remove('mobile-open'); sidebarBackdrop.classList.remove('active'); }
-
     mobileMenuBtn.addEventListener('click', openSidebar);
     closeSidebarBtn.addEventListener('click', closeSidebar);
     sidebarBackdrop.addEventListener('click', closeSidebar);
@@ -757,22 +473,11 @@
       closeSidebar();
     }
 
-    // ---------------- МЕДИА: ОТПРАВКА КАРТИНОК И DRAG & DROP ----------------
     attachBtn.addEventListener('click', () => fileInput.click());
-
     fileInput.addEventListener('change', (e) => {
       const file = e.target.files[0];
       if (file) sendImageFile(file);
       fileInput.value = '';
-    });
-
-    // Drag & Drop
-    chatArea.addEventListener('dragover', (e) => { e.preventDefault(); chatArea.classList.add('drag-over'); });
-    chatArea.addEventListener('dragleave', () => chatArea.classList.remove('drag-over'));
-    chatArea.addEventListener('drop', (e) => {
-      e.preventDefault();
-      chatArea.classList.remove('drag-over');
-      if (e.dataTransfer.files.length) sendImageFile(e.dataTransfer.files[0]);
     });
 
     function sendImageFile(file) {
@@ -784,47 +489,41 @@
       reader.readAsDataURL(file);
     }
 
-    // ---------------- МЕДИА: ЗАПИСЬ ГОЛОСОВЫХ СООБЩЕНИЙ ----------------
-    let mediaRecorder;
-    let audioChunks = [];
-    let isRecording = false;
-
+    let mediaRecorder; let audioChunks = []; let isRecording = false;
     micBtn.addEventListener('click', async () => {
       if (!isRecording) {
         try {
           const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
           mediaRecorder = new MediaRecorder(stream);
           audioChunks = [];
-
           mediaRecorder.ondataavailable = (e) => audioChunks.push(e.data);
           mediaRecorder.onstop = () => {
             const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
             const reader = new FileReader();
-            reader.onload = function(evt) {
-              emitPayload({ type: 'audio', mediaUrl: evt.target.result });
-            };
+            reader.onload = function(evt) { emitPayload({ type: 'audio', mediaUrl: evt.target.result }); };
             reader.readAsDataURL(audioBlob);
-            stream.getTracks().forEach(track => track.stop()); // закрываем микрофон
+            stream.getTracks().forEach(track => track.stop());
           };
-
-          mediaRecorder.start();
-          isRecording = true;
-          micBtn.classList.add('recording');
-        } catch(err) {
-          alert('Доступ к микрофону отклонен или не поддерживается!');
-        }
+          mediaRecorder.start(); isRecording = true; micBtn.classList.add('recording');
+        } catch(err) { alert('Нет доступа к микрофону!'); }
       } else {
-        mediaRecorder.stop();
-        isRecording = false;
-        micBtn.classList.remove('recording');
+        mediaRecorder.stop(); isRecording = false; micBtn.classList.remove('recording');
       }
     });
 
-    // Отправка сообщений
     form.addEventListener('submit', function(e) {
       e.preventDefault();
-      if (input.value.trim()) {
-        emitPayload({ type: 'text', text: input.value.trim() });
+      const rawText = input.value.trim();
+      if (rawText) {
+        let payloadText = rawText;
+        let isEncrypted = false;
+
+        if (isSecretMode) {
+          payloadText = encryptText(rawText, currentRoom);
+          isEncrypted = true;
+        }
+
+        emitPayload({ type: 'text', text: payloadText, encrypted: isEncrypted });
         input.value = '';
         socket.emit('typing', false);
       }
@@ -833,11 +532,8 @@
     function emitPayload(extraData) {
       const msgId = 'msg_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5);
       socket.emit('chat message', {
-        msgId: msgId,
-        name: myUsername,
-        avatar: myAvatar,
-        id: socket.id,
-        ...extraData
+        msgId: msgId, name: myUsername, avatar: myAvatar, id: socket.id,
+        room: currentRoom, ...extraData
       });
     }
 
@@ -848,7 +544,6 @@
       typingTimeout = setTimeout(() => socket.emit('typing', false), 2000);
     });
 
-    // Отрисовка любых сообщений
     socket.on('chat message', (data) => {
       const isMy = data.id === socket.id;
       const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
@@ -864,14 +559,25 @@
       });
       pickerHtml += '</div>';
 
-      // Содержимое сообщения (Текст / Картинка / Голосовое)
       let bodyHtml = '';
+      let isMsgEncryptedClass = '';
+
       if (data.type === 'image') {
         bodyHtml = `<img src="${data.mediaUrl}" class="chat-img" onclick="openFullImage('${data.mediaUrl}')" />`;
       } else if (data.type === 'audio') {
         bodyHtml = `<audio src="${data.mediaUrl}" controls class="chat-audio"></audio>`;
       } else {
-        bodyHtml = data.text;
+        let finalTxt = data.text;
+        if (data.encrypted) {
+          finalTxt = decryptText(data.text, data.room || currentRoom);
+          isMsgEncryptedClass = 'encrypted';
+        }
+
+        // ДС-фишка: подсветка упоминаний @имя
+        if (finalTxt.includes('@' + myUsername)) {
+          finalTxt = finalTxt.replace(new RegExp('@' + myUsername, 'g'), `<span class="mention">@${myUsername}</span>`);
+        }
+        bodyHtml = finalTxt;
       }
 
       wrapper.innerHTML = `
@@ -879,11 +585,33 @@
         <div class="message-content">
           ${pickerHtml}
           <div class="username">${data.name}</div>
-          <div class="message">${bodyHtml}</div>
+          <div class="message ${isMsgEncryptedClass}">${bodyHtml}</div>
           <div class="reactions-badge-container" id="reactions-${data.msgId}"></div>
           <div class="message-time">${time}</div>
         </div>
       `;
+
+      // Если сообщение зашифровано (секретный режим), включаем таймер сгорания на 10 секунд после отображения
+      if (data.encrypted) {
+        const msgEl = wrapper.querySelector('.message');
+        let timeLeft = 10;
+        const timerDiv = document.createElement('div');
+        timerDiv.classList.add('burn-timer');
+        timerDiv.textContent = `🔥 сгорит через ${timeLeft}с`;
+        wrapper.querySelector('.message-content').appendChild(timerDiv);
+
+        const burnInterval = setInterval(() => {
+          timeLeft--;
+          timerDiv.textContent = `🔥 сгорит через ${timeLeft}с`;
+          if (timeLeft <= 0) {
+            clearInterval(burnInterval);
+            wrapper.style.transition = 'opacity 0.5s, transform 0.5s';
+            wrapper.style.opacity = '0';
+            wrapper.style.transform = 'scale(0.8)';
+            setTimeout(() => wrapper.remove(), 500);
+          }
+        }, 1000);
+      }
 
       const msgBubble = wrapper.querySelector('.message');
       msgBubble.addEventListener('click', (e) => {
@@ -897,11 +625,7 @@
       chatWindow.scrollTop = chatWindow.scrollHeight;
     });
 
-    function openFullImage(url) {
-      fullImage.src = url;
-      imageModal.classList.add('active');
-    }
-
+    function openFullImage(url) { fullImage.src = url; imageModal.classList.add('active'); }
     imageModal.addEventListener('click', () => imageModal.classList.remove('active'));
 
     document.addEventListener('click', () => {
@@ -917,13 +641,11 @@
       const { msgId, emoji, user } = data;
       if (!reactionsData[msgId]) reactionsData[msgId] = {};
       if (!reactionsData[msgId][emoji]) reactionsData[msgId][emoji] = new Set();
-
       if (reactionsData[msgId][emoji].has(user)) {
         reactionsData[msgId][emoji].delete(user);
       } else {
         reactionsData[msgId][emoji].add(user);
       }
-
       const container = document.getElementById(`reactions-${msgId}`);
       if (container) {
         container.innerHTML = '';

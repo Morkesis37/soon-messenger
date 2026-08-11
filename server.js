@@ -1,7 +1,6 @@
 const express = require('express');
 const app = express();
 const http = require('http').createServer(app);
-// Увеличиваем лимит размера передаваемых файлов до 10 МБ
 const io = require('socket.io')(http, {
   maxHttpBufferSize: 1e7,
   cors: { origin: "*", methods: ["GET", "POST"] }
@@ -17,7 +16,6 @@ const users = {};
 
 io.on('connection', (socket) => {
 
-  // Вход пользователя
   socket.on('user join', (data) => {
     const room = (data.room || 'general').toLowerCase();
     socket.join(room);
@@ -27,7 +25,6 @@ io.on('connection', (socket) => {
     io.to(room).emit('system message', `${data.name} вошел(шла) в ${roomName}`);
   });
 
-  // Смена комнаты
   socket.on('change room', (newRoom) => {
     if (!users[socket.id]) return;
 
@@ -46,7 +43,7 @@ io.on('connection', (socket) => {
     io.to(targetRoom).emit('system message', `${users[socket.id].name} вошел(шла) в ${roomName}`);
   });
 
-  // Сообщения (текст, картинки, голосовые)
+  // Пересылка шифрованных или обычных сообщений
   socket.on('chat message', (data) => {
     if (users[socket.id]) {
       const room = users[socket.id].room;
@@ -54,7 +51,6 @@ io.on('connection', (socket) => {
     }
   });
 
-  // Реакции
   socket.on('add reaction', (data) => {
     if (users[socket.id]) {
       const room = users[socket.id].room;
@@ -62,7 +58,6 @@ io.on('connection', (socket) => {
     }
   });
 
-  // Печатает...
   socket.on('typing', (isTyping) => {
     if (users[socket.id]) {
       const room = users[socket.id].room;
@@ -70,7 +65,6 @@ io.on('connection', (socket) => {
     }
   });
 
-  // Выход
   socket.on('disconnect', () => {
     if (users[socket.id]) {
       const room = users[socket.id].room;
