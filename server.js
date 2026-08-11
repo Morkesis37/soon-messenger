@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 const http = require('http').createServer(app);
 const io = require('socket.io')(http, {
-  maxHttpBufferSize: 5e7, // Увеличили лимит до 50MB для видео
+  maxHttpBufferSize: 5e7,
   cors: { origin: "*", methods: ["GET", "POST"] }
 });
 
@@ -13,6 +13,7 @@ app.get('/', (req, res) => {
 });
 
 const users = {};
+const pinnedMessages = {}; // Закрепленные сообщения по комнатам
 
 io.on('connection', (socket) => {
 
@@ -27,6 +28,7 @@ io.on('connection', (socket) => {
       room: room 
     };
     
+    socket.emit('pinned message', pinnedMessages[room] || null);
     io.to(room).emit('system message', `${data.name} вошел(шла) в чат`);
     io.to(room).emit('update users list', getUsersInRoom(room));
   });
@@ -46,6 +48,7 @@ io.on('connection', (socket) => {
     socket.join(targetRoom);
     users[socket.id].room = targetRoom;
 
+    socket.emit('pinned message', pinnedMessages[targetRoom] || null);
     io.to(targetRoom).emit('system message', `${users[socket.id].name} вошел(шла) в чат`);
     io.to(targetRoom).emit('update users list', getUsersInRoom(targetRoom));
   });
@@ -64,6 +67,21 @@ io.on('connection', (socket) => {
     }
   });
 
+  socket.on('pin message', (data) => {
+    if (users[socket.id]) {
+      const room = users[socket.id].room;
+      pinnedMessages[room] = data;
+      io.to(room).emit('pinned message', data);
+    }
+  });
+
+  socket.on('vote poll', (data) => {
+    if (users[socket.id]) {
+      const room = users[socket.id].room;
+      io.to(room).emit('update poll', data);
+    }
+  });
+
   socket.on('add reaction', (data) => {
     if (users[socket.id]) {
       const room = users[socket.id].room;
@@ -71,19 +89,26 @@ io.on('connection', (socket) => {
     }
   });
 
+  const typingUsers = new Set();
   socket.on('typing', (isTyping) => {
-    if (users[socket.id]) {
-      const room = users[socket.id].room;
-      socket.to(room).emit('typing status', { name: users[socket.id].name, isTyping });
+    if (!users[socket.id]) return;
+    const room = users[socket.id].room;
+    if (isTyping) {
+      typingUsers.add(users[socket.id].name);
+    } else {
+      typingUsers.delete(users[socket.id].name);
     }
+    io.to(room).emit('typing status', Array.from(typingUsers));
   });
 
   socket.on('disconnect', () => {
     if (users[socket.id]) {
       const room = users[socket.id].room;
+      typingUsers.delete(users[socket.id].name);
       io.to(room).emit('system message', `${users[socket.id].name} вышел из сети`);
       delete users[socket.id];
       io.to(room).emit('update users list', getUsersInRoom(room));
+      io.to(room).emit('typing status', Array.from(typingUsers));
     }
   });
 });
